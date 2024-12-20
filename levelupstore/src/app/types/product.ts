@@ -1,0 +1,1 @@
+// Typdefinitioner för produkter
