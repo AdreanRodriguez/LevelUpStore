@@ -8,9 +8,15 @@ export default {
   ],
   theme: {
     extend: {
+      gridTemplateColumns: {
+        autoFit: "repeat(auto-fit, minmax(250px, 1fr))",
+      },
       colors: {
         background: "var(--background)",
         foreground: "var(--foreground)",
+      },
+      backgroundImage: {
+        "hero-pattern": "url('/subtle-prism.svg')",
       },
     },
   },

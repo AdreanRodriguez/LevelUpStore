@@ -1,1 +1,0 @@
-// Visa och hantera kundvagnen

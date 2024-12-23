@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 export default function Home() {
   return (
     <div
@@ -11,9 +13,11 @@ export default function Home() {
     >
       <h1 className="text-5xl font-bold">Welcome to LevelUp Store</h1>
       <p className="mt-4 text-xl">Your one-stop shop for the best gaming experience!</p>
-      <button className="p-4 mt-10 text-5xl border-solid border-2 border-indigo-600 rounded-md hover:border-indigo-300">
-        Shop now
-      </button>
+      <Link href={"/products"}>
+        <button className="p-4 mt-10 text-5xl border-solid border-2 border-[#213874] rounded-md hover:border-indigo-300">
+          Shop now
+        </button>
+      </Link>
     </div>
   );
 }
