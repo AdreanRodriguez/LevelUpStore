@@ -1,22 +1,36 @@
-// Funktion för att hämta data (tex med React Query)
+import { Product } from "@/app/types/product";
+import { ProductListResponse } from "@/app/types/product";
+
 const API_KEY = process.env.NEXT_PUBLIC_RAWG_API_KEY;
 
-// export async function fetchAllGames() {
+// Funktion för att hämta produkter från RAWG API
+export async function fetchProductsFromAPI(): Promise<ProductListResponse> {
+  if (!API_KEY) {
+    throw new Error("Missing API key");
+  }
 
-//   if (!API_KEY) {
-//     throw new Error("Missing API key. Ensure NEXT_PUBLIC_RAWG_API_KEY is set in .env.local");
-//   }
+  const response = await fetch(
+    `https://api.rawg.io/api/games?key=${API_KEY}&page_size=50&ordering=-added`
+  );
 
-//   const res = await fetch(
-//     `https://api.rawg.io/api/games?key=${API_KEY}&page_size=20&ordering=-rating`,
-//     { cache: "no-store" } // Ingen caching sker.
-//                           // Varje förfrågan går direkt till servern, och svaret lagras inte i cachen.
-//                           // Används när du alltid vill ha den senaste datan.
-//   );
+  if (!response.ok) {
+    throw new Error(`Failed to fetch products: ${response.status}`);
+  }
 
-//   if (!res.ok) {
-//     throw new Error(`Failed to fetch games: ${res.status}`);
-//   }
+  return response.json();
+}
 
-//   return res.json();
-// }
+export async function fetchProductById(id: string): Promise<Product> {
+  const API_KEY = process.env.NEXT_PUBLIC_RAWG_API_KEY;
+  if (!API_KEY) {
+    throw new Error("Missing API key");
+  }
+
+  const response = await fetch(`https://api.rawg.io/api/games/${id}?key=${API_KEY}`);
+
+  if (!response.ok) {
+    throw new Error(`Failed to fetch product: ${response.status}`);
+  }
+
+  return response.json();
+}

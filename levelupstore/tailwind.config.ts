@@ -18,6 +18,16 @@ export default {
       backgroundImage: {
         "hero-pattern": "url('/subtle-prism.svg')",
       },
+      keyframes: {
+        pulseSize: {
+          "0%, 100%": { transform: "scale(1)", opacity: "1" },
+          "50%": { transform: "scale(1.2)", opacity: "0.5" },
+        },
+      },
+      animation: {
+        blink: "blink 1s ease-in-out infinite",
+        pulseSize: "pulseSize 1s ease-in-out infinite",
+      },
     },
   },
   plugins: [],

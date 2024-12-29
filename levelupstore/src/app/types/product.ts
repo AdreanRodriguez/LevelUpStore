@@ -2,12 +2,22 @@ export interface ApiResponse<T> {
   results: T[];
 }
 
+export interface ProductPublisher {
+  id: number;
+  name: string;
+  slug: string;
+  games_count: number;
+  image_background: string;
+}
+
 export interface Product {
   id: string;
   name: string;
   background_image: string;
   rating: number;
-  description?: string; // Valfri egenskap
+  description_raw?: string;
+  publishers: ProductPublisher[];
+  released: string;
 }
 
 export interface ProductListResponse {

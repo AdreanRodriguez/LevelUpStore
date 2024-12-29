@@ -5,7 +5,6 @@ async function fetchProducts(): Promise<ApiResponse<Product>> {
   const res = await fetch("http://localhost:3000/api/products", {
     cache: "no-store", // Färsk data varje gång
   });
-  console.log("RESPONSE:", res);
 
   if (!res.ok) {
     throw new Error(`Failed to fetch products: ${res.status}`);
@@ -16,6 +15,7 @@ async function fetchProducts(): Promise<ApiResponse<Product>> {
 
 export default async function ProductsPage() {
   const data = await fetchProducts();
+  console.log("RESULT", data.results);
 
   return (
     <div className="p-5 bg-hero-pattern">
