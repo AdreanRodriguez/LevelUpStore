@@ -20,6 +20,7 @@ async function fetchProducts(): Promise<ApiResponse<Platform>> {
 
 export default async function ProductsPage() {
   const data = await fetchProducts();
+  console.log("PLATTFORMAR", data.results);
 
   return (
     <div className="p-5 bg-hero-pattern">

@@ -22,15 +22,26 @@ export async function fetchProductsFromAPI(): Promise<ProductListResponse> {
 
 export async function fetchProductById(id: string): Promise<Product> {
   const API_KEY = process.env.NEXT_PUBLIC_RAWG_API_KEY;
+
   if (!API_KEY) {
-    throw new Error("Missing API key");
+    throw new Error("Missing API key. Ensure NEXT_PUBLIC_RAWG_API_KEY is set in your environment.");
+  }
+
+  if (!id) {
+    throw new Error("Product ID is required to fetch the product.");
   }
 
   const response = await fetch(`https://api.rawg.io/api/games/${id}?key=${API_KEY}`);
 
   if (!response.ok) {
-    throw new Error(`Failed to fetch product: ${response.status}`);
+    throw new Error(`Failed to fetch product with ID ${id}: ${response.status}`);
   }
 
-  return response.json();
+  const data = await response.json();
+
+  if (!data || !data.id) {
+    throw new Error("Invalid product data received from the API.");
+  }
+
+  return data;
 }

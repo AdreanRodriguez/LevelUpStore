@@ -1,32 +1,34 @@
-import { NextApiRequest, NextApiResponse } from "next";
+import { NextResponse } from "next/server";
 import { Product } from "@/app/types/product";
 
-export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse<Product | { message: string }>
-) {
-  const { id } = req.query;
+const API_URL = "https://api.rawg.io/api/games";
+const API_KEY = process.env.NEXT_PUBLIC_RAWG_API_KEY;
 
+export async function GET(req: Request, { params }: { params: { id: string } }) {
   try {
-    if (!id || typeof id !== "string") {
-      throw new Error("Invalid or missing id");
+    const { id } = params;
+
+    if (!id) {
+      return NextResponse.json({ message: "Invalid or missing product ID" }, { status: 400 });
     }
 
-    const API_KEY = process.env.NEXT_PUBLIC_RAWG_API_KEY;
     if (!API_KEY) {
-      throw new Error("Missing API key");
+      throw new Error("Missing API key. Ensure NEXT_PUBLIC_RAWG_API_KEY is set.");
     }
 
-    const response = await fetch(`https://api.rawg.io/api/games/${id}?key=${API_KEY}`);
+    const response = await fetch(`${API_URL}/${id}?key=${API_KEY}`);
 
     if (!response.ok) {
-      throw new Error(`Failed to fetch product with id ${id}: ${response.status}`);
+      throw new Error(`Failed to fetch product with ID ${id}: ${response.status}`);
     }
 
     const product = (await response.json()) as Product;
-    res.status(200).json(product);
+    return NextResponse.json(product, { status: 200 });
   } catch (error: any) {
     console.error("Error fetching product:", error.message || error);
-    res.status(500).json({ message: "Failed to fetch product" });
+    return NextResponse.json(
+      { message: error.message || "Failed to fetch product" },
+      { status: 500 }
+    );
   }
 }

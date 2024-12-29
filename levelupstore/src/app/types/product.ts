@@ -1,7 +1,3 @@
-export interface ApiResponse<T> {
-  results: T[];
-}
-
 export interface ProductPublisher {
   id: number;
   name: string;
@@ -22,4 +18,8 @@ export interface Product {
 
 export interface ProductListResponse {
   results: Product[];
+}
+
+export interface ApiResponse<T> {
+  results: T[];
 }
