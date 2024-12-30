@@ -11,7 +11,6 @@ export default async function GenrePage({ params }: GenrePageProps) {
     return (
       <div>
         <h1>{genre.name}</h1>
-        <p>Slug: {genre.slug}</p>
         <p>Games count: {genre.games_count}</p>
         <img
           src={genre.image_background}
