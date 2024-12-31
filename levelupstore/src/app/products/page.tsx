@@ -1,27 +1,16 @@
-import { ApiResponse, Product } from "@/app/types/product";
+// import { ApiResponse, Product } from "@/app/types/product";
 import Link from "next/link";
-
-async function fetchProducts(): Promise<ApiResponse<Product>> {
-  const res = await fetch("http://localhost:3000/api/products", {
-    cache: "no-store", // Färsk data varje gång
-  });
-
-  if (!res.ok) {
-    throw new Error(`Failed to fetch products: ${res.status}`);
-  }
-
-  return res.json();
-}
+import { fetchProducts } from "@/app/lib/fetcher";
 
 export default async function ProductsPage() {
-  const data = await fetchProducts();
-  console.log("RESULT", data.results);
+  const { results } = await fetchProducts();
+  console.log("RESULT", results);
 
   return (
     <div className="p-5 bg-hero-pattern h-lvh">
       <h1 className="text-3xl font-bold mb-4 ">All Products</h1>
       <div className="grid grid-cols-autoFit gap-4">
-        {data.results.map((product) => (
+        {results.map((product) => (
           <Link
             key={product.id}
             href={`/products/${product.id}`}

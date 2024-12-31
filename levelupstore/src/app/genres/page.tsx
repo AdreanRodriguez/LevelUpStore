@@ -4,6 +4,7 @@ import { fetchGenres } from "../lib/fetcher";
 export default async function GenresPage() {
   try {
     const genres = await fetchGenres();
+    console.log("GENRES", genres.results);
 
     return (
       <div>

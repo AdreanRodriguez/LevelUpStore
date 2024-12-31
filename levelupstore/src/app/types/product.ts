@@ -21,6 +21,6 @@ export interface ProductListResponse {
   results: Product[];
 }
 
-export interface ApiResponse<T> {
+export interface ProductApiResponse<T> {
   results: T[];
 }
