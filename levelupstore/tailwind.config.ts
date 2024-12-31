@@ -12,12 +12,14 @@ export default {
         autoFit: "repeat(auto-fit, minmax(250px, 1fr))",
       },
       colors: {
-        background: "var(--background)",
-        foreground: "var(--foreground)",
+        lightBackground: "#f0f0f0", // Ljust läge
+        lightTextColor: "#171717", // Ljust läge, textfärg
+        darkBackground: "#1b2028", // Mörkt läge
+        darkTextColor: "#ededed", // Mörk läge, textfärg
       },
-      backgroundImage: {
-        "hero-pattern": "url('/subtle-prism.svg')",
-      },
+      // backgroundImage: {
+      //   "hero-pattern": "url('/subtle-prism.svg')",
+      // },
       keyframes: {
         pulseSize: {
           "0%, 100%": { transform: "scale(1)", opacity: "1" },
