@@ -25,7 +25,7 @@ export default async function ProductsPage() {
           <Link
             key={product.id}
             href={`/products/${product.id}`}
-            className="block p-4 border rounded shadow hover:shadow-lg bg-lightBackground dark:bg-darkBackground"
+            className="block p-4 border rounded shadow hover:shadow-lg dark:bg-darkBackground dark:text-darkTextColor"
           >
             <figure className="aspect-video">
               <img
