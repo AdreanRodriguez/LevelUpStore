@@ -5,7 +5,7 @@ export default async function ProductPage({ params }: { params: { id: string } }
     throw new Error("Product ID is missing in the route parameters.");
   }
   const product = await fetchProductById(params.id);
-  // console.log("DETALJERAD PRODUKT", product);
+  console.log("DETALJERAD PRODUKT", product);
 
   return (
     <div className="p-5">

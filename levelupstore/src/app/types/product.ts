@@ -14,6 +14,7 @@ export interface Product {
   description_raw?: string;
   publishers: ProductPublisher[];
   released: string;
+  metacritic_platforms: string;
 }
 
 export interface ProductListResponse {

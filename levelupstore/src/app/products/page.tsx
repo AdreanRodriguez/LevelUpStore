@@ -25,7 +25,7 @@ export default async function ProductsPage() {
           <Link
             key={product.id}
             href={`/products/${product.id}`}
-            className="block p-4 border rounded shadow hover:shadow-lg bg-white"
+            className="block p-4 border rounded shadow hover:shadow-lg bg-lightBackground dark:bg-darkBackground"
           >
             <figure className="aspect-video">
               <img
@@ -36,6 +36,7 @@ export default async function ProductsPage() {
             </figure>
             <h2 className="text-xl font-bold">{product.name}</h2>
             <p className="text-sm text-gray-500">Rating: {product.rating}</p>
+            <p>{product.metacritic_platforms}</p>
           </Link>
         ))}
       </div>
