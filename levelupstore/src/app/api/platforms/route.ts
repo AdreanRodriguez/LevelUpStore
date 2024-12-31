@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { PlatformListResponse } from "@/app/types/platforms";
 
 const API_KEY = process.env.NEXT_PUBLIC_RAWG_API_KEY;
+const API_URL_PLATFORMS = "https://api.rawg.io/api/platforms";
 
 export async function GET() {
   try {
@@ -10,7 +11,7 @@ export async function GET() {
     }
 
     const response = await fetch(
-      `https://api.rawg.io/api/platforms?key=${API_KEY}&page_size=50&ordering=-added`
+      `${API_URL_PLATFORMS}?key=${API_KEY}&page_size=50&ordering=-added`
     );
 
     if (!response.ok) {
