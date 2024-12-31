@@ -2,8 +2,11 @@
 import { ThemeProvider as NextThemesProvider, ThemeProviderProps } from "next-themes";
 import { ReactNode, useEffect, useState } from "react";
 
-interface CustomThemeProviderProps extends ThemeProviderProps {
+interface CustomThemeProviderProps extends Omit<ThemeProviderProps, "attribute"> {
   children: ReactNode;
+  attribute: "class"; // Specifik typ för attribute
+  defaultTheme: string;
+  enableSystem: boolean;
 }
 
 export default function ThemeProvider({ children, ...props }: CustomThemeProviderProps) {
