@@ -5,21 +5,18 @@ export default {
     "./src/pages/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
+    ".src/app/styles/globals.css",
   ],
+  darkMode: "class",
   theme: {
     extend: {
       gridTemplateColumns: {
         autoFit: "repeat(auto-fit, minmax(250px, 1fr))",
       },
       colors: {
-        lightBackground: "#f0f0f0", // Ljust läge
-        lightTextColor: "#171717", // Ljust läge, textfärg
-        darkBackground: "#1b2028", // Mörkt läge
-        darkTextColor: "#ededed", // Mörk läge, textfärg
+        textColor: "var(--textColor)",
+        background: "var(--background)",
       },
-      // backgroundImage: {
-      //   "hero-pattern": "url('/subtle-prism.svg')",
-      // },
       keyframes: {
         pulseSize: {
           "0%, 100%": { transform: "scale(1)", opacity: "1" },
