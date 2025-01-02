@@ -6,6 +6,7 @@ const API_URL_GENRES = "https://api.rawg.io/api/genres";
 
 export async function GET(req: Request, { params }: { params: { id: string } }) {
   try {
+    console.log("Received params:", params);
     const { id } = params;
 
     if (!API_KEY) {

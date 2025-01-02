@@ -10,7 +10,7 @@ export default function Home() {
   const handleShopNow = () => {
     setIsLoading(true); // Visa Loading-komponenten
     setTimeout(() => {
-      navigateToRoute.push("/products"); // Navigera till /products efter 1.5 sekunder
+      navigateToRoute.push("/games"); // Navigera till /games efter 1.5 sekunder
     }, 1500);
   };
 

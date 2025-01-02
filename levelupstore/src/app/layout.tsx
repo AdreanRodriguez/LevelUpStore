@@ -28,11 +28,11 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+      <body className={`${geistSans.variable} ${geistMono.variable} antialiased bg-custom`}>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           <ThemeSwitcher />
           <Header />
-          <main className="w-max[1200]">{children}</main>
+          <main className="max-w-mainSize mx-auto bg-custom">{children}</main>
           <Footer />
         </ThemeProvider>
       </body>

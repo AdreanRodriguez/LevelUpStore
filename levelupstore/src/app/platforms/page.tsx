@@ -12,14 +12,14 @@ export default async function ProductsPage() {
         {data.results.map((platform) => (
           <Link
             key={platform.id}
-            href={`/products/${platform.id}`}
-            className="block p-4 border rounded shadow hover:shadow-lg bg-[#1E1E1E]"
+            href={`/games/${platform.id}`}
+            className="block p-4 border rounded shadow hover:shadow-lg bg-card"
           >
-            <figure className="aspect-square">
+            <figure className="aspect-[3/2]">
               <img
                 src={platform.image_background}
                 alt={platform.name}
-                className="rounded mb-3 w-full h-full"
+                className="rounded w-full h-full"
               />
             </figure>
             <h2 className="text-xl font-bold text-custom text-righteous mt-2">{platform.name}</h2>

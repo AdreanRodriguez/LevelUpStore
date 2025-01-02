@@ -35,7 +35,6 @@ export async function fetchPlatforms(): Promise<PlatformApiResponse<Platform>> {
   const res = await fetch(`${localhostURL}/api/platforms`, {
     cache: "no-store", // Färsk data varje gång
   });
-  console.log("RESPONSE:", res);
 
   if (!res.ok) {
     throw new Error(`Failed to fetch products: ${res.status}`);
