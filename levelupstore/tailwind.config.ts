@@ -10,17 +10,21 @@ export default {
   darkMode: "class",
   theme: {
     extend: {
+      maxWidth: {
+        mainSize: "1200px",
+      },
       fontFamily: {
         afacad: ['"Afacad"', "sans-serif"],
         audiowide: ['"Audiowide"', "sans-serif"],
         righteous: ['"Righteous"', "cursive"],
       },
       gridTemplateColumns: {
-        autoFit: "repeat(auto-fit, minmax(250px, 1fr))",
+        autoFit: "repeat(auto-fit, minmax(300px, 1fr))",
       },
       colors: {
         textColor: "var(--textColor)",
         background: "var(--background)",
+        bgCard: "var(--bgCard)",
       },
       keyframes: {
         pulseSize: {
