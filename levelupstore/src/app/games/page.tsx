@@ -1,20 +1,20 @@
 // import { ApiResponse, Product } from "@/app/types/product";
 import Link from "next/link";
-import { fetchProducts } from "@/app/lib/fetcher";
+import { fetchGames } from "@/app/lib/fetcher";
 
-export default async function ProductsPage() {
-  const { results } = await fetchProducts();
+export default async function GamesPage() {
+  const { results } = await fetchGames();
   console.log("RESULT", results);
 
   return (
-    <div className="p-5 bg-hero-pattern h-lvh">
-      <h1 className="text-3xl font-bold mb-4 ">All Products</h1>
+    <div className="p-5 px-2 h-lvh bg-custom font-righteous">
+      <h1 className="text-3xl font-bold mb-6 text-custom">All Products</h1>
       <div className="grid grid-cols-autoFit gap-4">
         {results.map((product) => (
           <Link
             key={product.id}
-            href={`/products/${product.id}`}
-            className="block p-4 border rounded shadow hover:shadow-lg dark:bg-darkBackground dark:text-darkTextColor"
+            href={`/games/${product.id}`}
+            className="block p-4 border rounded shadow hover:shadow-lg text-custom"
           >
             <figure className="aspect-video">
               <img

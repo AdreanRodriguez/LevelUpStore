@@ -1,10 +1,10 @@
-import { fetchProductById } from "@/app/lib/fetcher";
+import { fetchGameById } from "@/app/lib/fetcher";
 
 export default async function ProductPage({ params }: { params: { id: string } }) {
   if (!params.id) {
-    throw new Error("Product ID is missing in the route parameters.");
+    throw new Error("Game ID is missing in the route parameters.");
   }
-  const product = await fetchProductById(params.id);
+  const product = await fetchGameById(params.id);
   console.log("DETALJERAD PRODUKT", product);
 
   return (

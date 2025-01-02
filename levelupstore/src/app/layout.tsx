@@ -31,7 +31,7 @@ export default function RootLayout({
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           <ThemeSwitcher />
-          {/* <Header /> */}
+          <Header />
           <main className="w-max[1200]">{children}</main>
           <Footer />
         </ThemeProvider>
