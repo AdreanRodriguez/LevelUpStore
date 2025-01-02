@@ -10,6 +10,11 @@ export default {
   darkMode: "class",
   theme: {
     extend: {
+      fontFamily: {
+        afacad: ['"Afacad"', "sans-serif"],
+        audiowide: ['"Audiowide"', "sans-serif"],
+        righteous: ['"Righteous"', "cursive"],
+      },
       gridTemplateColumns: {
         autoFit: "repeat(auto-fit, minmax(250px, 1fr))",
       },
