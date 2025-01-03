@@ -3,7 +3,7 @@ export interface PlatformApiResponse<T> {
 }
 
 export interface Platform {
-  id: string;
+  id: number;
   name: string;
   image_background: string;
 }

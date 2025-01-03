@@ -7,13 +7,17 @@ export default async function GenresPage() {
     console.log("GENRES", genres.results);
 
     return (
-      <div className="text-3xl font-bold mb-4 text-custom bg-custom h-lvh p-5">
-        {/* <h1 className="text-2xl font-righteous font-righteous mb-8">Genres</h1> */}
+      <div className="text-3xl font-bold mb-4 text-custom min-h-screen p-5">
         <h1 className="text-3xl font-bold mb-6 text-custom font-righteous">Genres</h1>
-        <ul>
+        <ul className="text-custom font-righteous">
           {genres.results.map((genre) => (
-            <li key={genre.id}>
+            <li key={genre.id} className="flex ">
               <Link href={`/genres/${genre.id}`}>{genre.name}</Link>
+              <img
+                src={genre.image_background}
+                alt={`${genre.name} image`}
+                className="w-1/6 rounded-xl h-1/6"
+              />
             </li>
           ))}
         </ul>

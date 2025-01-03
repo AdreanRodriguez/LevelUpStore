@@ -4,68 +4,52 @@ import { Platform, PlatformApiResponse } from "../types/platforms";
 
 const localhostURL = "http://localhost:3000";
 
+async function safeFetch<T>(url: string): Promise<T> {
+  const HTTP_ERROR = "HTTP error! Status: ";
+  const URL_ERROR = "Fetch error for URL ";
+  const UNKNOWN_URL = "Unknown error for URL ";
+
+  try {
+    const response = await fetch(
+      url,
+      { cache: "no-store" } // Hämta alltid färsk data
+    );
+    if (!response.ok) {
+      throw new Error(`${HTTP_ERROR} ${response.status}`);
+    }
+    return await response.json();
+  } catch (error) {
+    if (error instanceof Error) {
+      console.error(`${URL_ERROR} ${url}: ${error.message}`);
+      throw error; // Kasta vidare för Error Boundary att fånga som ligget i app/layout.tsx
+    } else {
+      console.error(`${UNKNOWN_URL} ${url}`, error);
+      throw new Error("An unknown error occurred");
+    }
+  }
+}
+
 // Hämta produkter
 export async function fetchGames(): Promise<ProductApiResponse<Product>> {
-  const response = await fetch(`${localhostURL}/api/games`, {
-    cache: "no-store", // Hämta alltid färsk data och inte använda en cache
-  });
-
-  if (!response.ok) {
-    throw new Error(`Failed to fetch games: ${response.status}`);
-  }
-
-  const data: ProductApiResponse<Product> = await response.json();
-  return data;
+  return safeFetch<ProductApiResponse<Product>>(`${localhostURL}/api/games`);
 }
 
 // Hämta specifik produkt på id
 export async function fetchGameById(id: string): Promise<Product> {
-  const response = await fetch(`${localhostURL}/api/games/${id}`, { cache: "no-store" });
-
-  if (!response.ok) {
-    throw new Error(`Failed to fetch game with ID ${id}: ${response.status}`);
-  }
-
-  const data: Product = await response.json();
-  return data;
+  return safeFetch<Product>(`${localhostURL}/api/games/${id}`);
 }
 
 // Hämta alla platformar
 export async function fetchPlatforms(): Promise<PlatformApiResponse<Platform>> {
-  const res = await fetch(`${localhostURL}/api/platforms`, {
-    cache: "no-store", // Färsk data varje gång
-  });
-
-  if (!res.ok) {
-    throw new Error(`Failed to fetch products: ${res.status}`);
-  }
-
-  const data = await res.json();
-  console.log("Fetched Products from API Route:", data.results);
-
-  return data;
+  return safeFetch<PlatformApiResponse<Platform>>(`${localhostURL}/api/platforms`);
 }
 
 // Hämta alla kategorier
 export async function fetchGenres(): Promise<GenresListResponse> {
-  const response = await fetch(`${localhostURL}/api/genres`, { cache: "no-store" });
-
-  if (!response.ok) {
-    throw new Error(`Failed to fetch genres: ${response.status}`);
-  }
-
-  const data: GenresListResponse = await response.json();
-  return data;
+  return safeFetch<GenresListResponse>(`${localhostURL}/api/genres`);
 }
 
 // Hämta kategori baserat på id
 export async function fetchGenreById(id: string): Promise<Genres> {
-  const response = await fetch(`${localhostURL}/api/genres/${id}`, { cache: "no-store" });
-
-  if (!response.ok) {
-    throw new Error(`Failed to fetch genre with ID ${id}: ${response.status}`);
-  }
-
-  const data: Genres = await response.json();
-  return data;
+  return safeFetch<Genres>(`${localhostURL}/api/genres/${id}`);
 }

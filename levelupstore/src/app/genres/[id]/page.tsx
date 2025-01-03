@@ -1,20 +1,18 @@
 import { fetchGames, fetchGenreById } from "@/app/lib/fetcher";
+import { Genres } from "@/app/types/genres";
+import { Product, ProductApiResponse } from "@/app/types/product";
 
-interface GenrePageProps {
-  params: { id: string };
-}
-
-export default async function GenrePage(props: { params: Promise<{ id: string }> }) {
+export default async function GenrePage(props: { params: { id: string } }) {
   try {
-    const { id } = await props.params;
+    const { id } = props.params;
 
-    // Hämta data för genren och spel
-    const genre = await fetchGenreById(id);
-    const games = await fetchGames();
+    // Hämta data för genren och spelen
+    const genre: Genres = await fetchGenreById(id); // Hämtar en enskild genre
+    const games: ProductApiResponse<Product> = await fetchGames(); // Hämtar en lista av spel
 
     // Filtrera spelen som matchar genren
-    const filteredGames = games.results.filter((game: any) =>
-      game.genres.some((g: any) => g.id === genre.id)
+    const filteredGames = games.results.filter((game) =>
+      game.genres.some((g) => g.id === genre.id)
     );
 
     return (
@@ -28,7 +26,7 @@ export default async function GenrePage(props: { params: Promise<{ id: string }>
         />
 
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 bg-custom shadow-sm">
-          {filteredGames.map((game: any) => (
+          {filteredGames.map((game) => (
             <div key={game.id} className="p-4 border rounded-lg bg-card">
               <img
                 src={game.background_image}
