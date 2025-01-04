@@ -5,7 +5,7 @@ import Footer from "./components/Footer";
 import { Geist, Geist_Mono } from "next/font/google";
 import ThemeProvider from "./components/ThemeProvider";
 import ThemeSwitcher from "./components/ThemeSwitcher";
-import { ErrorBoundary } from "@/app/components/errorBoundary/ErrorBoundary";
+import ErrorBoundary from "@/app/components/errorBoundary/ErrorBoundary";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",

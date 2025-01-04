@@ -2,9 +2,10 @@ import { fetchGames, fetchGenreById } from "@/app/lib/fetcher";
 import { Genres } from "@/app/types/genres";
 import { Product, ProductApiResponse } from "@/app/types/product";
 
-export default async function GenrePage(props: { params: { id: string } }) {
+export default async function GenrePage({ params }: { params: Promise<{ id: string }> }) {
   try {
-    const { id } = props.params;
+    const { id } = await params; // Vänta på params att bli upplöst
+    console.log("Resolved ID in GenrePage:", id);
 
     // Hämta data för genren och spelen
     const genre: Genres = await fetchGenreById(id); // Hämtar en enskild genre
@@ -41,6 +42,12 @@ export default async function GenrePage(props: { params: { id: string } }) {
       </div>
     );
   } catch (error: any) {
-    return <div>Error loading genre: {error.message}</div>;
+    console.error("Error in GenrePage:", error.message || error);
+    return (
+      <div>
+        <h1>Error loading genre</h1>
+        <p>{error.message}</p>
+      </div>
+    );
   }
 }

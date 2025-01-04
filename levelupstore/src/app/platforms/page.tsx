@@ -1,8 +1,11 @@
 import Link from "next/link";
-import { fetchPlatforms } from "../lib/fetcher";
+import { fetchGames, fetchPlatforms } from "../lib/fetcher";
 
 export default async function ProductsPage() {
   const data = await fetchPlatforms();
+  const games = await fetchGames();
+  console.log(`GAMES: `, games.results);
+
   console.log("PLATTFORMAR", data.results);
 
   return (

@@ -44,6 +44,11 @@ export async function fetchPlatforms(): Promise<PlatformApiResponse<Platform>> {
   return safeFetch<PlatformApiResponse<Platform>>(`${localhostURL}/api/platforms`);
 }
 
+// Hämta spel på specifik plattform
+export async function fetchPlatformById(id: string): Promise<Platform> {
+  return safeFetch<Platform>(`${localhostURL}/api/platforms/${id}`);
+}
+
 // Hämta alla kategorier
 export async function fetchGenres(): Promise<GenresListResponse> {
   return safeFetch<GenresListResponse>(`${localhostURL}/api/genres`);

@@ -7,7 +7,7 @@ export interface ProductPublisher {
 }
 
 export interface Product {
-  id: string;
+  id: number;
   name: string;
   background_image: string;
   rating: number;
