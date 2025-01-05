@@ -1,4 +1,5 @@
 import Navigation from "./Navigation";
+import SearchBar from "./SearchBar";
 
 export default function Header() {
   return (
@@ -6,7 +7,10 @@ export default function Header() {
       <h1 className=" font-righteous text-2xl mb-4 font-bold text-custom sm:text-4xl">
         LevelUp Store
       </h1>
-      <div className="text-custom w-3/4 max-w-screen-lg">
+      <div className="max-w-mainSize w-full">
+        <SearchBar />
+      </div>
+      <div className="text-custom w-1/4 max-w-screen-lg">
         <Navigation />
       </div>
     </header>

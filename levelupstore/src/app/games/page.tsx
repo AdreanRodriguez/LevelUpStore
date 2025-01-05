@@ -1,6 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { fetchGames } from "@/app/lib/fetcher";
+import GenresPage from "../components/Genres";
 
 export default async function GamesPage() {
   const { results } = await fetchGames();
@@ -9,6 +10,7 @@ export default async function GamesPage() {
   return (
     <div className="p-5 px-2 min-h-screen bg-custom font-righteous">
       <h1 className="text-3xl font-bold mb-6 text-custom">Games</h1>
+      <GenresPage />
       <div className="grid grid-cols-autoFit gap-4">
         {results.map((product) => (
           <Link

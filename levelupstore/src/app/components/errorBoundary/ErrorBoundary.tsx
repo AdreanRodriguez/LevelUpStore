@@ -23,7 +23,7 @@ const ErrorBoundary: React.FC<ErrorBoundaryProps> = ({ children }) => {
 
   if (error) {
     return (
-      <div className="p-5 text-center h-lvh">
+      <div className="p-5 text-center h-lvh font-righteous max-w-mainSize m-auto">
         <h1 className="text-3xl font-bold text-red-500 mb-4">Oops! Something went wrong.</h1>
         <p className="mb-4">{error.message}</p>
         <button
