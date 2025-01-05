@@ -10,7 +10,7 @@ export default function Home() {
   const handleShopNow = () => {
     setIsLoading(true); // Visa Loading-komponenten
     setTimeout(() => {
-      navigateToRoute.push("/products"); // Navigera till /products efter 1.5 sekunder
+      navigateToRoute.push("/games"); // Navigera till /games efter 1.5 sekunder
     }, 1500);
   };
 
@@ -20,20 +20,18 @@ export default function Home() {
 
   return (
     <>
-      <header className="text-textColor">Här ska header vara</header>
-      <div className="flex flex-col p-5 items-center justify-center min-h-screen  dark:bg-darkBackground text-lightTextColor bg-lightBackground dark:text-darkTextColor">
-        <h1 className="text-5xl font-bold text-lightTextColor dark:text-darkTextColor">
-          Welcome to LevelUp Store
-        </h1>
-        <p className="mt-4 text-xl">Your one-stop shop for the best gaming experience!</p>
+      <div className="flex flex-col p-5 items-center justify-center min-h-screen bg-custom">
+        <h1 className="text-5xl font-bold text-custom">Welcome to LevelUp Store</h1>
+        <p className="mt-4 text-xl text-custom">
+          Your one-stop shop for the best gaming experience!
+        </p>
         <button
           onClick={handleShopNow}
-          className="p-4 mt-10 text-5xl border-solid border-2 border-[#213874] rounded-md hover:border-indigo-300"
+          className=" text-custom p-4 mt-10 text-5xl border-solid border-2 border-[#000] rounded-md hover:border-[#fff]"
         >
           Shop now
         </button>
       </div>
-      <footer className="text-textColor">Här ska footer vara</footer>
     </>
   );
 }

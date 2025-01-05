@@ -1,8 +1,11 @@
 import "@/app/styles/globals.css";
 import type { Metadata } from "next";
+import Header from "./components/Header";
+import Footer from "./components/Footer";
 import { Geist, Geist_Mono } from "next/font/google";
 import ThemeProvider from "./components/ThemeProvider";
 import ThemeSwitcher from "./components/ThemeSwitcher";
+import ErrorBoundary from "@/app/components/errorBoundary/ErrorBoundary";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -26,25 +29,16 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+      <body className={`${geistSans.variable} ${geistMono.variable} antialiased bg-custom`}>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           <ThemeSwitcher />
-          <main>{children}</main>
+          <ErrorBoundary>
+            <Header />
+            <main className="max-w-mainSize mx-auto bg-custom">{children}</main>
+            <Footer />
+          </ErrorBoundary>
         </ThemeProvider>
       </body>
     </html>
   );
 }
-
-export const ErrorBoundary = ({ error, reset }: { error: Error; reset: () => void }) => (
-  <div className="p-5 text-center">
-    <h1 className="text-3xl font-bold text-red-500 mb-4">Something went wrong globally!</h1>
-    <p className="mb-4">{error.message}</p>
-    <button
-      className="mr-2 px-4 py-2 bg-gray-600 text-white rounded hover:bg-gray-500"
-      onClick={() => reset()}
-    >
-      Try Again
-    </button>
-  </div>
-);

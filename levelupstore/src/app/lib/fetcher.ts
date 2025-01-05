@@ -1,54 +1,60 @@
-import { ProductApiResponse, Product } from "@/app/types/product";
 import { Genres, GenresListResponse } from "@/app/types/genres";
+import { ProductApiResponse, Product } from "@/app/types/product";
+import { Platform, PlatformApiResponse } from "../types/platforms";
 
 const localhostURL = "http://localhost:3000";
 
-// Hämta produkter
-export async function fetchProducts(): Promise<ProductApiResponse<Product>> {
-  const response = await fetch(`${localhostURL}/api/products`, {
-    cache: "no-store", // Hämta alltid färsk data och inte använda en cache
-  });
+async function safeFetch<T>(url: string): Promise<T> {
+  const HTTP_ERROR = "HTTP error! Status: ";
+  const URL_ERROR = "Fetch error for URL ";
+  const UNKNOWN_URL = "Unknown error for URL ";
 
-  if (!response.ok) {
-    throw new Error(`Failed to fetch products: ${response.status}`);
+  try {
+    const response = await fetch(
+      url,
+      { cache: "no-store" } // Hämta alltid färsk data
+    );
+    if (!response.ok) {
+      throw new Error(`${HTTP_ERROR} ${response.status}`);
+    }
+    return await response.json();
+  } catch (error) {
+    if (error instanceof Error) {
+      console.error(`${URL_ERROR} ${url}: ${error.message}`);
+      throw error; // Kasta vidare för Error Boundary att fånga som ligget i app/layout.tsx
+    } else {
+      console.error(`${UNKNOWN_URL} ${url}`, error);
+      throw new Error("An unknown error occurred");
+    }
   }
+}
 
-  const data: ProductApiResponse<Product> = await response.json();
-  return data;
+// Hämta produkter
+export async function fetchGames(): Promise<ProductApiResponse<Product>> {
+  return safeFetch<ProductApiResponse<Product>>(`${localhostURL}/api/games`);
 }
 
 // Hämta specifik produkt på id
-export async function fetchProductById(id: string): Promise<Product> {
-  const response = await fetch(`${localhostURL}/api/products/${id}`, { cache: "no-store" });
+export async function fetchGameById(id: string): Promise<Product> {
+  return safeFetch<Product>(`${localhostURL}/api/games/${id}`);
+}
 
-  if (!response.ok) {
-    throw new Error(`Failed to fetch product with ID ${id}: ${response.status}`);
-  }
+// Hämta alla platformar
+export async function fetchPlatforms(): Promise<PlatformApiResponse<Platform>> {
+  return safeFetch<PlatformApiResponse<Platform>>(`${localhostURL}/api/platforms`);
+}
 
-  const data: Product = await response.json();
-  return data;
+// Hämta spel på specifik plattform
+export async function fetchPlatformById(id: string): Promise<Platform> {
+  return safeFetch<Platform>(`${localhostURL}/api/platforms/${id}`);
 }
 
 // Hämta alla kategorier
 export async function fetchGenres(): Promise<GenresListResponse> {
-  const response = await fetch(`${localhostURL}/api/genres`, { cache: "no-store" });
-
-  if (!response.ok) {
-    throw new Error(`Failed to fetch genres: ${response.status}`);
-  }
-
-  const data: GenresListResponse = await response.json();
-  return data;
+  return safeFetch<GenresListResponse>(`${localhostURL}/api/genres`);
 }
 
 // Hämta kategori baserat på id
 export async function fetchGenreById(id: string): Promise<Genres> {
-  const response = await fetch(`${localhostURL}/api/genres/${id}`, { cache: "no-store" });
-
-  if (!response.ok) {
-    throw new Error(`Failed to fetch genre with ID ${id}: ${response.status}`);
-  }
-
-  const data: Genres = await response.json();
-  return data;
+  return safeFetch<Genres>(`${localhostURL}/api/genres/${id}`);
 }
