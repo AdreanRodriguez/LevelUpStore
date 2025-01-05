@@ -1,17 +1,19 @@
 import Link from "next/link";
 import Image from "next/image";
-import { fetchGames } from "@/app/lib/fetcher";
 import GenresPage from "../components/Genres";
+import { fetchGames } from "@/app/lib/fetcher";
+import FilterToggle from "../components/FilterToggle";
 
 export default async function GamesPage() {
   const { results } = await fetchGames();
-  console.log("RESULT", results);
 
   return (
-    <div className="p-5 px-2 min-h-screen bg-custom font-righteous">
-      <h1 className="text-3xl font-bold mb-6 text-custom">Games</h1>
-      <GenresPage />
-      <div className="grid grid-cols-autoFit gap-4">
+    <section className="p-5 px-2 min-h-screen bg-custom font-righteous flex flex-col md:flex-row">
+      <FilterToggle>
+        <GenresPage />
+      </FilterToggle>
+
+      <div className="grid grid-cols-autoFit gap-4 flex-1 ml-0 md:ml-16">
         {results.map((product) => (
           <Link
             key={product.id}
@@ -41,6 +43,6 @@ export default async function GamesPage() {
           </Link>
         ))}
       </div>
-    </div>
+    </section>
   );
 }

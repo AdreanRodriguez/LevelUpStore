@@ -18,7 +18,6 @@ export default async function GenreDetails({ params }: { params: { id: string } 
 
     return (
       <div className="bg-custom text-custom">
-        {/* Genre-info */}
         <h1 className="text-3xl font-bold pt-4 ml-2">{genre.name}</h1>
         <p className="text-xl font-audiowide mb-10 ml-2">Games count: {filteredGames.length}</p>
         <img
@@ -27,7 +26,6 @@ export default async function GenreDetails({ params }: { params: { id: string } 
           className="w-full h-auto mb-6 rounded"
         />
 
-        {/* Spel-listan */}
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 bg-custom shadow-sm">
           {filteredGames.map((game) => (
             <div key={game.id} className="p-4 border rounded-lg bg-card">

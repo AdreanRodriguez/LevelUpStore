@@ -3,7 +3,7 @@ export default function SearchBar() {
     <input
       type="text"
       placeholder="Search..."
-      className="w-full px-2 py-1 border-text-custom bg-white"
+      className="w-full p-2 border-text-custom bg-white text-cutom font-righteous px-2"
     />
   );
 }

@@ -7,18 +7,17 @@ export default async function Genres() {
     console.log("GENRES", genres.results);
 
     return (
-      <div className="text-3xl font-bold mb-4 text-custom min-h-screen p-5 w-[20rem] rounded-xl border-8">
-        <h1 className="text-3xl font-bold mb-6 text-custom font-righteous">Genres</h1>
+      <div className="text-3xl font-bold mb-4 text-custom pl-2">
         <ul className="text-custom font-righteous">
           {genres.results.map((genre) => (
             <li key={genre.id} className="text-custom">
-              <Link href={`/genres/${genre.id}`} className="flex mb-6 text-custom">
+              <Link href={`/genres/${genre.id}`} className="flex mb-6 text-custom items-center">
                 <img
                   src={genre.image_background}
                   alt={`${genre.name} image`}
-                  className="aspect-square object-cover size-12 md:size-16 rounded-2xl mr-2"
+                  className="aspect-square object-cover size-12 md:size-10 rounded-xl mr-2 text-justify"
                 />
-                <p className="text-custom">{genre.name}</p>
+                <p className="text-custom text-xl">{genre.name}</p>
               </Link>
             </li>
           ))}
