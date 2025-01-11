@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 
+// Children är i games/page.tsx rad 13 Genres.tsx
 export default function FilterToggle({ children }: { children: React.ReactNode }) {
   const [showFilter, setShowFilter] = useState(false);
 

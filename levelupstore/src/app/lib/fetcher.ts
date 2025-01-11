@@ -35,7 +35,7 @@ export async function fetchGames(): Promise<ProductApiResponse<Product>> {
 }
 
 // Hämta specifik produkt på id
-export async function fetchGameById(id: string): Promise<Product> {
+export async function fetchGameById(id: string | number): Promise<Product> {
   return safeFetch<Product>(`${localhostURL}/api/games/${id}`);
 }
 
@@ -57,4 +57,11 @@ export async function fetchGenres(): Promise<GenresListResponse> {
 // Hämta kategori baserat på id
 export async function fetchGenreById(id: string): Promise<Genres> {
   return safeFetch<Genres>(`${localhostURL}/api/genres/${id}`);
+}
+
+// Sök efter spel i sökfältet
+export async function fetchSearchedGames(query: string): Promise<ProductApiResponse<Product>> {
+  return safeFetch<ProductApiResponse<Product>>(
+    `${localhostURL}/api/search?query=${encodeURIComponent(query)}`
+  );
 }

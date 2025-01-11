@@ -13,7 +13,7 @@ const ThemeSwitcher: React.FC = () => {
 
   if (!mount) {
     // Returnera ingenting tills komponenten är monterad, för att teman ska fungera.
-    return <>children</>;
+    return null;
   }
 
   return mount ? (

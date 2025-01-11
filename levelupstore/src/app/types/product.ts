@@ -16,6 +16,19 @@ export interface Product {
   released: string;
   parent_platforms: ParentPlatform[];
   genres: { id: number; name: string }[];
+  // Valfria fält
+  tags?: Tags[];
+  esrb_rating?: EsrbRating;
+  developers?: { image_background: string; name: string };
+}
+
+interface Tags {
+  name: string;
+  language: string;
+}
+
+interface EsrbRating {
+  name: string;
 }
 
 export interface ParentPlatform {

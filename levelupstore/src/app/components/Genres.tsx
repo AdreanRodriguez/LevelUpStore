@@ -17,7 +17,9 @@ export default async function Genres() {
                   alt={`${genre.name} image`}
                   className="aspect-square object-cover size-12 md:size-10 rounded-xl mr-2 text-justify"
                 />
-                <p className="text-custom text-xl">{genre.name}</p>
+                <p className="text-custom text-xl hover:text-[#7a7a7a] hover:underline underline-offset-8">
+                  {genre.name}
+                </p>
               </Link>
             </li>
           ))}
