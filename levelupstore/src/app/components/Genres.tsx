@@ -8,7 +8,7 @@ export default async function Genres() {
 
     return (
       <div className="text-3xl font-bold mb-4 text-custom pl-2">
-        <ul className="text-custom font-righteous">
+        <ul className="text-custom font-righteous grid grid-cols-[repeat(auto-fill,minmax(160px,1fr))]">
           {genres.results.map((genre) => (
             <li key={genre.id} className="text-custom">
               <Link href={`/genres/${genre.id}`} className="flex mb-6 text-custom items-center">
