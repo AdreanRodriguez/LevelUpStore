@@ -1,7 +1,7 @@
 "use client";
 
 import { Product } from "@/app/types/product";
-import { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { fetchSearchedGames } from "@/app/lib/fetcher";
 import Link from "next/link";
 
@@ -10,32 +10,26 @@ export default function SearchBar() {
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [searchResults, setSearchResults] = useState<Product[]>([]);
   const [isDropdownOpen, setIsDropdownOpen] = useState<boolean>(false);
+  const [highlightedIndex, setHighlightedIndex] = useState<number>(0); // För att hålla koll på markerat element
 
   const dropdownRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
     const fetchResults = async () => {
-      // trim() tar bort alla mellanrum före och efter strängen om det finns med,
-      // även om användaren bara skriver massa mellanrum så blir det en tom sträng.
       if (searchQuery.trim() === "") {
         setSearchResults([]);
         return;
       }
 
       setLoading(true);
-
-      // Anropa `fetchSearchedGames` som i sin tur använder `safeFetch`
       const { results } = await fetchSearchedGames(searchQuery);
-      console.log(results);
-
       setSearchResults(results.slice(0, 10)); // Visa max 10 resultat
       setIsDropdownOpen(true);
-
       setLoading(false);
     };
 
-    const timeoutResult = setTimeout(fetchResults, 300); // Debounce: vänta 300ms innan API-anrop
-    return () => clearTimeout(timeoutResult); // Rensa timeout vid varje ny inmatning
+    const timeoutResult = setTimeout(fetchResults, 300); // Debounce
+    return () => clearTimeout(timeoutResult);
   }, [searchQuery]);
 
   useEffect(() => {
@@ -50,9 +44,24 @@ export default function SearchBar() {
   }, []);
 
   const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
-    if (event.key === "Enter" && searchQuery.trim() !== "") {
-      setIsDropdownOpen(false); // Stäng dropdown vid Enter-tryck
-      setSearchQuery("");
+    if (event.key === "ArrowDown") {
+      // Flytta markeringen ner
+      setHighlightedIndex((prevIndex) =>
+        prevIndex < searchResults.length - 1 ? prevIndex + 1 : 0
+      );
+    } else if (event.key === "ArrowUp") {
+      // Flytta markeringen upp
+      setHighlightedIndex((prevIndex) =>
+        prevIndex > 0 ? prevIndex - 1 : searchResults.length - 1
+      );
+    } else if (event.key === "Enter" && highlightedIndex >= 0) {
+      // Vid "Enter", navigera till det markerade elementet
+      const selectedResult = searchResults[highlightedIndex];
+      if (selectedResult) {
+        window.location.href = `/search?query=${encodeURIComponent(selectedResult.name)}`;
+        setIsDropdownOpen(false);
+        setSearchQuery("");
+      }
     }
   };
 
@@ -64,6 +73,7 @@ export default function SearchBar() {
   return (
     <div className="relative w-full" ref={dropdownRef}>
       <input
+        id="inputField"
         type="text"
         value={searchQuery}
         onChange={(e) => setSearchQuery(e.target.value)}
@@ -74,10 +84,14 @@ export default function SearchBar() {
 
       {isDropdownOpen && searchResults.length > 0 && (
         <ul className="absolute w-full bg-card border-bg-custom mt-1 rounded shadow-lg z-10">
-          {searchResults.map((result) => (
+          {searchResults.map((result, index) => (
             <li
               key={result.id}
-              className="p-2 hover:bg-[#939393] hover:text-white dark:text-white dark:hover:bg-[#4b4b4b] cursor-pointer"
+              className={`p-2 cursor-pointer ${
+                highlightedIndex === index
+                  ? "bg-[#939393] text-white"
+                  : "hover:bg-[#939393] hover:text-white dark:text-white dark:hover:bg-[#4b4b4b]"
+              }`}
             >
               <Link
                 href={`/search?query=${encodeURIComponent(result.name)}`}

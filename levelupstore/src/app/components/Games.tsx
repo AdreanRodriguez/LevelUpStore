@@ -1,8 +1,8 @@
 import Link from "next/link";
 import Image from "next/image";
+import FilterToggle from "./FilterToggle";
 import GenresPage from "@/app/genres/page";
 import { fetchGames } from "@/app/lib/fetcher";
-import FilterToggle from "./FilterToggle";
 
 export default async function Games() {
   const { results } = await fetchGames();
