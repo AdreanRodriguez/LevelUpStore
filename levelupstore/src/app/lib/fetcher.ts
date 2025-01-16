@@ -21,7 +21,7 @@ async function safeFetch<T>(url: string): Promise<T> {
   } catch (error) {
     if (error instanceof Error) {
       console.error(`${URL_ERROR} ${url}: ${error.message}`);
-      throw error; // Kasta vidare för Error Boundary att fånga som ligget i app/layout.tsx
+      throw error; // Kasta vidare för Error Boundary att fånga som ligger i app/layout.tsx
     } else {
       console.error(`${UNKNOWN_URL} ${url}`, error);
       throw new Error("An unknown error occurred");
@@ -61,7 +61,13 @@ export async function fetchGenreById(id: string): Promise<Genres> {
 
 // Sök efter spel i sökfältet
 export async function fetchSearchedGames(query: string): Promise<ProductApiResponse<Product>> {
-  return safeFetch<ProductApiResponse<Product>>(
+  const response = await safeFetch<ProductApiResponse<Product>>(
     `${localhostURL}/api/search?query=${encodeURIComponent(query)}`
   );
+
+  console.log("API Response:", response); // Logga API-svaret
+  return {
+    ...response,
+    results: response.results || [], // Säkerställ att alltid returnera en tom array om `results` är undefined
+  };
 }

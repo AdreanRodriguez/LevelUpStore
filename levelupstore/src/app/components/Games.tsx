@@ -28,7 +28,7 @@ export default async function Games() {
               />
             </figure>
             <h2 className="text-xl font-bold">{product.name}</h2>
-            <p className="text-sm text-gray-500">Rating: {product.rating}</p>
+            <p className="text-m text-custom">Rating: {product.rating}</p>
             <div className="flex space-x-2 mt-2">
               {product.parent_platforms.map(({ platform }) => (
                 <Image

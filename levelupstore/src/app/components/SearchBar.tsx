@@ -79,7 +79,7 @@ export default function SearchBar() {
         onChange={(e) => setSearchQuery(e.target.value)}
         onKeyDown={handleKeyDown}
         placeholder="Search games..."
-        className="w-full p-2 border rounded bg-custom text-custom"
+        className="w-full p-2 border bg-card rounded text-custom"
       />
 
       {isDropdownOpen && searchResults.length > 0 && (

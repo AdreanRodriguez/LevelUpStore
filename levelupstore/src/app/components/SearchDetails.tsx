@@ -56,7 +56,7 @@ export default function SearchDetails() {
         <ul className="text-xl">
           {game.tags &&
             game.tags.map((tag) => (
-              <li>
+              <li key={tag.id}>
                 <p>{tag.name}</p>
                 <p>Language: {tag.language}</p>
               </li>
