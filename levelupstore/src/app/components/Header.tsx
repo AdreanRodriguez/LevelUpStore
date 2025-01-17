@@ -10,7 +10,7 @@ export default function Header() {
       <div className="max-w-mainSize w-full">
         <SearchBar />
       </div>
-      <div className="text-custom w-1/4 max-w-screen-lg">
+      <div className="text-custom max-w-screen-lg w-full">
         <Navigation />
       </div>
     </header>

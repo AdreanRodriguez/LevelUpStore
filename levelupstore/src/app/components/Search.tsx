@@ -15,7 +15,7 @@ export default function Search() {
   useEffect(() => {
     const fetchResults = async () => {
       if (!query) {
-        console.log("No query provided");
+        console.log("Ingen query");
         return;
       }
 
