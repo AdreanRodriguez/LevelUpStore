@@ -11,7 +11,7 @@ export async function GET() {
       return errorResponse("Missing API key. Ensure NEXT_PUBLIC_RAWG_API_KEY is set.", 400);
     }
 
-    const response = await fetch(`${API_URL_GAMES}?key=${API_KEY}&page_size=10&ordering=-added`);
+    const response = await fetch(`${API_URL_GAMES}?key=${API_KEY}&page_size=12&ordering=-added`);
 
     if (!response.ok) {
       return errorResponse("Failed to fetch products: ", 500);

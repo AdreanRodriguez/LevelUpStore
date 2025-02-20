@@ -21,7 +21,7 @@ async function safeFetch<T>(url: string): Promise<T> {
   } catch (error) {
     if (error instanceof Error) {
       console.error(`${URL_ERROR} ${url}: ${error.message}`);
-      throw error; // Kasta vidare för Error Boundary att fånga som ligget i app/layout.tsx
+      throw error; // Kasta vidare för Error Boundary att fånga som ligger i app/layout.tsx
     } else {
       console.error(`${UNKNOWN_URL} ${url}`, error);
       throw new Error("An unknown error occurred");
@@ -35,7 +35,7 @@ export async function fetchGames(): Promise<ProductApiResponse<Product>> {
 }
 
 // Hämta specifik produkt på id
-export async function fetchGameById(id: string): Promise<Product> {
+export async function fetchGameById(id: string | number): Promise<Product> {
   return safeFetch<Product>(`${localhostURL}/api/games/${id}`);
 }
 
@@ -57,4 +57,17 @@ export async function fetchGenres(): Promise<GenresListResponse> {
 // Hämta kategori baserat på id
 export async function fetchGenreById(id: string): Promise<Genres> {
   return safeFetch<Genres>(`${localhostURL}/api/genres/${id}`);
+}
+
+// Sök efter spel i sökfältet
+export async function fetchSearchedGames(query: string): Promise<ProductApiResponse<Product>> {
+  const response = await safeFetch<ProductApiResponse<Product>>(
+    `${localhostURL}/api/search?query=${encodeURIComponent(query)}`
+  );
+
+  console.log("API Response:", response); // Logga API-svaret
+  return {
+    ...response,
+    results: response.results || [], // Säkerställ att alltid returnera en tom array om `results` är undefined
+  };
 }

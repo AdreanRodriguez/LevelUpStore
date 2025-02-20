@@ -9,7 +9,7 @@
   --background-light: #f5f5f5;
   --background-dark: #121212;
   --background-dark-card: #2f2f2f;
-  --background-light-card: #d6d6d6;
+  --background-light-card: #ffffff;
 }
 
 /* Textfärger */
@@ -42,15 +42,15 @@
 body {
   color: var(--textColor-light);
   background: var(--background-light);
-  font-family: Arial, Helvetica, sans-serif;
-  font-family: "Audiowide";
+  /* font-family: Arial, Helvetica, sans-serif;
+  font-family: "Audiowide"; */
 }
 
 body.dark {
   color: var(--textColor-dark);
   background: var(--background-dark);
 }
-
+/* 
 .font-audiowide {
   font-family: "AudioWide", sans-serif;
-}
+} */
