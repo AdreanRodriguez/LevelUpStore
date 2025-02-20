@@ -1,7 +1,7 @@
-import { fetchGames, fetchGenreById } from "@/app/lib/fetcher";
-import { Genres } from "@/app/types/genres";
-import { Product, ProductApiResponse } from "@/app/types/product";
 import Link from "next/link";
+import { Genres } from "@/app/types/genres";
+import { fetchGames, fetchGenreById } from "@/app/lib/fetcher";
+import { Product, ProductApiResponse } from "@/app/types/product";
 
 export default async function GenreDetails({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;

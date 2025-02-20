@@ -65,7 +65,8 @@ export default function SearchBar() {
     }
   };
 
-  const handleLinkClick = () => {
+  const handleLinkClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    e.stopPropagation(); // Stoppar klick från att bubbla upp och stänga dropdownen först
     setIsDropdownOpen(false);
     setSearchQuery("");
   };
@@ -73,17 +74,18 @@ export default function SearchBar() {
   return (
     <div className="relative w-full" ref={dropdownRef}>
       <input
-        id="inputField"
         type="text"
+        id="inputField"
+        autoComplete="off"
         value={searchQuery}
-        onChange={(e) => setSearchQuery(e.target.value)}
         onKeyDown={handleKeyDown}
         placeholder="Search games..."
+        onChange={(e) => setSearchQuery(e.target.value)}
         className="w-full p-2 border bg-card rounded text-custom"
       />
 
       {isDropdownOpen && searchResults.length > 0 && (
-        <ul className="absolute w-full bg-card border-bg-custom mt-1 rounded shadow-lg z-10">
+        <ul className="absolute w-full bg-card border-bg-custom mt-1 rounded shadow-lg z-10 pointer-events-auto">
           {searchResults.map((result, index) => (
             <li
               key={result.id}
@@ -95,7 +97,7 @@ export default function SearchBar() {
             >
               <Link
                 href={`/search?query=${encodeURIComponent(result.name)}`}
-                onClick={() => handleLinkClick()}
+                onClick={handleLinkClick}
                 aria-label={`View results for ${result.name}`}
               >
                 {result.name}

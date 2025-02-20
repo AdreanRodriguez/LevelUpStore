@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { useEffect, useState } from "react";
 import { Product } from "@/app/types/product";
 import { useSearchParams } from "next/navigation";
@@ -23,8 +24,8 @@ export default function Search() {
 
       try {
         const { results } = await fetchSearchedGames(query);
-        console.log("Fetched results:", results); // Logga resultaten här
-        setResults(results || []); // Sätt resultaten, även om det är en tom array
+        console.log("Fetched results:", results); // Logga resultatet
+        setResults(results || []); // Sätt resultatet, även om det är en tom array
       } catch (error) {
         console.error("Error fetching search results:", error);
         setResults([]); // Hantera fel genom att sätta tom lista
@@ -36,6 +37,8 @@ export default function Search() {
     fetchResults();
   }, [query]);
 
+  const fallbackImage = "/fallbackImage.svg";
+
   return (
     <div className="p-5">
       <h1 className="text-2xl text-custom font-bold mb-4">
@@ -43,7 +46,7 @@ export default function Search() {
       </h1>
 
       {loading ? (
-        <p>Loading...</p>
+        <p className="text-center text-custom">Loading...</p>
       ) : results && results.length > 0 ? (
         <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {results.map((result) => (
@@ -53,10 +56,18 @@ export default function Search() {
             >
               <Link href={`/search/${result.id}`}>
                 <figure className="aspect-video">
-                  <img
-                    src={result.background_image}
+                  <Image
+                    src={result.background_image || fallbackImage}
                     alt={`background image for ${result.name}`}
-                    className="rounded mb-3 w-full h-full object-cover"
+                    width={500}
+                    height={300}
+                    className={`rounded mb-3 w-full h-full ${
+                      result.background_image ? "object-cover" : "object-contain p-5"
+                    }`}
+                    onError={(e) => {
+                      (e.target as HTMLImageElement).src = fallbackImage;
+                    }}
+                    unoptimized // Använd om du inte vill att Next.js ska optimera bilder
                   />
                 </figure>
                 <h2 className="text-xl font-semibold">{result.name}</h2>

@@ -29,14 +29,15 @@ export default async function Games() {
             </figure>
             <h2 className="text-xl font-bold">{product.name}</h2>
             <p className="text-m text-custom">Rating: {product.rating}</p>
-            <div className="flex space-x-2 mt-2">
+            <div className="flex space-x-2 mt-2 text-custom">
               {product.parent_platforms.map(({ platform }) => (
                 <Image
-                  key={platform.id}
-                  src={`/platform/${platform.id}.svg`}
-                  alt={platform.name}
                   width={24}
                   height={24}
+                  key={platform.id}
+                  alt={platform.name}
+                  className="invert dark:invert-0"
+                  src={`/platform/${platform.id}.svg`}
                 />
               ))}
             </div>
