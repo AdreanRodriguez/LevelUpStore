@@ -10,12 +10,14 @@ export default async function GamesDetails({ params }: { params: Promise<{ id: s
   const game = await fetchGameById(id);
   console.log("DETALJERAD PRODUKT", game);
 
+  const fallbackImage = "/fallbackImage.svg";
+
   return (
     <div className="p-5 min-h-screen">
       <h1 className="text-3xl font-bold mb-4 text-custom font-righteous">{game.name}</h1>
       <figcaption className="w-fit mb-10 ">
         <img
-          src={game.background_image}
+          src={game.background_image || fallbackImage}
           alt={game.name}
           className="rounded mb-4 w-full h-64 object-cover"
         />
@@ -25,7 +27,9 @@ export default async function GamesDetails({ params }: { params: Promise<{ id: s
       </p>
       <p className="text-gray-700 font-bold mb-2 text-custom font-righteous">
         Publisher:{" "}
-        <span className="font-thin">{game.publishers[0].name || "No name available"}</span>
+        <span className="font-thin">
+          {game.publishers?.length > 0 ? game.publishers[0].name : "No publisher available"}
+        </span>
       </p>
       <p className="text-gray-700 font-bold text-custom font-righteous">
         Released: <span className="font-thin">{game.released || "No release date available"}</span>

@@ -6,9 +6,9 @@ export default function Navigation() {
       <Link href="/platforms" className="hover:text-[#a2a2a2] sm:text-2xl">
         Platforms
       </Link>
-      <Link href="/games" className="hover:text-[#a2a2a2] sm:text-2xl">
+      {/* <Link href="/games" className="hover:text-[#a2a2a2] sm:text-2xl">
         Games
-      </Link>
+      </Link> */}
     </nav>
   );
 }

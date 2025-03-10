@@ -18,23 +18,29 @@ export default async function GenreDetails({ params }: { params: Promise<{ id: s
     // Filtrera spelen som matchar genren
     const filteredGames = games.results.filter((game) => game.genres && game.genres.length > 0);
 
+    const fallbackImage = "/fallbackImage.svg";
+
     return (
       <div className="bg-custom text-custom">
         <h1 className="text-3xl font-bold pt-4 ml-2">{genre.name}</h1>
         <p className="text-xl font-audiowide mb-10 ml-2">Games count: {filteredGames.length}</p>
         <img
-          src={genre.image_background}
+          src={genre.image_background || fallbackImage}
           alt={`${genre.name} background`}
           className="w-full h-auto mb-6 rounded"
         />
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 bg-custom">
+        <div
+          className="
+        grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 bg-custom
+        "
+        >
           {filteredGames.length > 0 &&
             filteredGames.map((game) => (
               <div key={game.id} className="p-4 border rounded-lg bg-card shadow hover:shadow-lg">
                 <Link href={`/games/${game.id}`}>
                   <img
-                    src={game.background_image}
+                    src={game.background_image || fallbackImage}
                     alt={`Background image of ${game.name}`}
                     className="w-full h-48 object-cover rounded"
                   />

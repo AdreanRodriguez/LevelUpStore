@@ -55,6 +55,7 @@ export default function SearchDetails() {
         width={300}
         height={100}
         className={` ${game.background_image ? "w-full h-auto mb-4" : "mx-auto pb-20"}`}
+        unoptimized
       />
       <article className="grid grid-cols-[repeat(auto-fit,minmax(200px,1fr))] gap-4 flex-1 ml-0 md:ml-16">
         <p className="mb-2 ">Rating: {game.rating}</p>

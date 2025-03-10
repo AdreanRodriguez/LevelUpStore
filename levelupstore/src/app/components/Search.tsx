@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import { Product } from "@/app/types/product";
 import { useSearchParams } from "next/navigation";
 import { fetchSearchedGames } from "@/app/lib/fetcher";
+import getPriceByYear from "../utils/getPticeByYear";
 
 export default function Search() {
   const searchParams = useSearchParams();
@@ -49,32 +50,53 @@ export default function Search() {
         <p className="text-center text-custom">Loading...</p>
       ) : results && results.length > 0 ? (
         <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          {results.map((result) => (
-            <li
-              key={result.id}
-              className="block p-4 border rounded shadow hover:shadow-lg bg-card text-custom"
-            >
-              <Link href={`/search/${result.id}`}>
-                <figure className="aspect-video">
-                  <Image
-                    src={result.background_image || fallbackImage}
-                    alt={`background image for ${result.name}`}
-                    width={500}
-                    height={300}
-                    className={`rounded mb-3 w-full h-full ${
-                      result.background_image ? "object-cover" : "object-contain p-5"
+          {results.map((result) => {
+            const releaseYear =
+              result.released && result.released !== "N/A"
+                ? new Date(result.released).getFullYear()
+                : "N/A";
+
+            const price =
+              releaseYear !== "N/A" && typeof releaseYear === "number"
+                ? `$${getPriceByYear(releaseYear).toFixed(2)}`
+                : "N/A";
+            return (
+              <li
+                key={result.id}
+                className="block p-4 border rounded shadow hover:shadow-lg bg-card text-custom"
+              >
+                <Link href={`/search/${result.id}`}>
+                  <figure className="aspect-video">
+                    <Image
+                      src={result.background_image || fallbackImage}
+                      alt={`background image for ${result.name}`}
+                      width={500}
+                      height={300}
+                      className={`rounded mb-3 w-full h-full ${
+                        result.background_image ? "object-cover" : "object-contain p-5"
+                      }`}
+                      onError={(e) => {
+                        (e.target as HTMLImageElement).src = fallbackImage;
+                      }}
+                      // unoptimized // Använd om du inte vill att Next.js ska optimera bilder
+                    />
+                  </figure>
+                  <h2 className="text-xl font-semibold">{result.name}</h2>
+                  <p className="text-sm text-gray-500">Rating: {result.rating}</p>
+                  <p className="text-xl">{releaseYear}</p>
+                  <p
+                    className={`text-xl font-bold pt-5 ${
+                      typeof releaseYear === "number" && releaseYear < 2010
+                        ? "text-red-500"
+                        : "text-ellipsis"
                     }`}
-                    onError={(e) => {
-                      (e.target as HTMLImageElement).src = fallbackImage;
-                    }}
-                    unoptimized // Använd om du inte vill att Next.js ska optimera bilder
-                  />
-                </figure>
-                <h2 className="text-xl font-semibold">{result.name}</h2>
-                <p className="text-sm text-gray-500">Rating: {result.rating}</p>
-              </Link>
-            </li>
-          ))}
+                  >
+                    {price}
+                  </p>
+                </Link>
+              </li>
+            );
+          })}
         </ul>
       ) : (
         <p>No results found for "{query}".</p>

@@ -1,6 +1,6 @@
 import { Genres, GenresListResponse } from "@/app/types/genres";
-import { ProductApiResponse, Product } from "@/app/types/product";
 import { Platform, PlatformApiResponse } from "../types/platforms";
+import { ProductApiResponse, Product, ProductListResponse } from "@/app/types/product";
 
 const localhostURL = "http://localhost:3000";
 
@@ -30,8 +30,8 @@ async function safeFetch<T>(url: string): Promise<T> {
 }
 
 // Hämta produkter
-export async function fetchGames(): Promise<ProductApiResponse<Product>> {
-  return safeFetch<ProductApiResponse<Product>>(`${localhostURL}/api/games`);
+export async function fetchGames(page: number = 1): Promise<ProductListResponse> {
+  return safeFetch<ProductListResponse>(`${localhostURL}/api/games?page=${page}`);
 }
 
 // Hämta specifik produkt på id

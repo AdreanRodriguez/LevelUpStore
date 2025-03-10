@@ -5,13 +5,17 @@ const API_KEY = process.env.NEXT_PUBLIC_RAWG_API_KEY;
 const API_URL_GAMES = "https://api.rawg.io/api/games";
 
 // Hämtar 10 produkter
-export async function GET() {
+export async function GET(req: Request) {
   try {
     if (!API_KEY) {
       return errorResponse("Missing API key. Ensure NEXT_PUBLIC_RAWG_API_KEY is set.", 400);
     }
 
-    const response = await fetch(`${API_URL_GAMES}?key=${API_KEY}&page_size=12&ordering=-added`);
+    const { searchParams } = new URL(req.url);
+    const page = searchParams.get("page") || "1";
+    const response = await fetch(
+      `${API_URL_GAMES}?key=${API_KEY}&page=${page}&page_size=12&ordering=-added`
+    );
 
     if (!response.ok) {
       return errorResponse("Failed to fetch products: ", 500);
