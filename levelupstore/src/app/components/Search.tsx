@@ -5,8 +5,8 @@ import Image from "next/image";
 import { useEffect, useState } from "react";
 import { Product } from "@/app/types/product";
 import { useSearchParams } from "next/navigation";
+import getPriceByYear from "../utils/getPriceByYear";
 import { fetchSearchedGames } from "@/app/lib/fetcher";
-import getPriceByYear from "../utils/getPticeByYear";
 
 export default function Search() {
   const searchParams = useSearchParams();
@@ -25,7 +25,6 @@ export default function Search() {
 
       try {
         const { results } = await fetchSearchedGames(query);
-        console.log("Fetched results:", results); // Logga resultatet
         setResults(results || []); // Sätt resultatet, även om det är en tom array
       } catch (error) {
         console.error("Error fetching search results:", error);

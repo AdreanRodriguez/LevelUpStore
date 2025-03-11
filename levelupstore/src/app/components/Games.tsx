@@ -2,24 +2,29 @@
 
 import Link from "next/link";
 import Image from "next/image";
+import { useAtom } from "jotai";
 import FilterToggle from "./FilterToggle";
 import GenresPage from "@/app/genres/page";
 import { useState, useEffect } from "react";
 import { Product } from "@/app/types/product";
 import { fetchGames } from "@/app/lib/fetcher";
-import getPriceByYear from "../utils/getPticeByYear";
+import { addToCartAtom } from "./../store/cart";
+import getPriceByYear from "../utils/getPriceByYear";
 import { useSearchParams, useRouter } from "next/navigation";
 
 export default function Games() {
+  const [, addToCart] = useAtom(addToCartAtom); // Hämta addToCart-funktionen
+
   const router = useRouter();
   const searchParams = useSearchParams();
 
   const [loading, setLoading] = useState(true);
   const [totalPages, setTotalPages] = useState(1);
   const [games, setGames] = useState<Product[]>([]);
+
   const page = Number(searchParams.get("page")) || 1;
 
-  const MAX_PAGES = 50;
+  const MAX_PAGES = 12;
   const MAX_VISIBLE_PAGES = 10;
 
   const startPage = Math.max(1, page - Math.floor(MAX_VISIBLE_PAGES / 2));
@@ -35,7 +40,6 @@ export default function Games() {
       setLoading(true);
       try {
         const data = await fetchGames(page);
-        console.log("GAMES", data);
 
         setGames(data.results);
         const calculatedPages = data.count ? Math.ceil(data.count / 10) : 1;
@@ -55,11 +59,6 @@ export default function Games() {
       window.scrollTo(0, 0);
     }
   };
-
-  function handleBuyGame(e: React.MouseEvent<HTMLButtonElement>) {
-    e.stopPropagation();
-    console.log("BUY NOW is clicked");
-  }
 
   return (
     <section className="p-5 px-2 min-h-screen bg-custom font-righteous flex flex-col">
@@ -84,9 +83,8 @@ export default function Games() {
             return (
               <div
                 key={product.id}
-                className="block p-4 border rounded shadow hover:shadow-lg bg-card text-custom"
+                className="p-4 border rounded shadow hover:shadow-lg bg-card text-custom flex flex-col justify-between"
               >
-                {/* Endast bild och namn är en klickbar länk */}
                 <Link href={`/games/${product.id}`} className="block">
                   <figure className="aspect-video">
                     <Image
@@ -94,13 +92,14 @@ export default function Games() {
                       alt={product.name}
                       width={400}
                       height={225}
+                      priority={false}
                       className="rounded mb-3 w-full h-full"
                     />
                   </figure>
                   <h2 className="text-xl font-bold">{product.name}</h2>
                 </Link>
 
-                <p className="text-xl text-custom">Rating: {product.rating}</p>
+                <p className="text-xl text-custom">Rating: ⭐({product.rating})</p>
                 <p
                   className={`p-5 flex justify-end font-bold text-2xl ${
                     typeof releaseYear === "number" && releaseYear < 2010
@@ -111,24 +110,29 @@ export default function Games() {
                   {price}
                 </p>
 
-                {/* Plattformar och köpknapp */}
                 <div className="flex justify-between items-center">
-                  <div className="flex space-x-2 mt-2 text-custom">
-                    {product.parent_platforms?.map(({ platform }) => (
+                  <div className="flex space-x-2 mt-2 text-custom justify-end items-center">
+                    {product.parent_platforms?.slice(0, 4).map(({ platform }) => (
                       <Image
                         width={24}
                         height={24}
+                        priority={false}
                         key={platform.id}
                         alt={platform.name}
                         className="invert dark:invert-0"
                         src={`/platform/${platform.id}.svg`}
                       />
                     ))}
+                    {/* Om det finns fler än 4 plattformar, lägg till "..." */}
+                    {product.parent_platforms?.length > 4 && (
+                      <span className="flex items-end">
+                        <p className="text-xl">...</p>
+                      </span>
+                    )}
                   </div>
 
-                  {/* BUY NOW-knappen är fristående och påverkar inte länken */}
                   <button
-                    onClick={(e) => handleBuyGame(e)}
+                    onClick={() => addToCart(product)}
                     className="text-white font-bold bg-orange-500 hover:bg-orange-600 py-2 px-4 rounded"
                   >
                     BUY NOW
@@ -140,7 +144,7 @@ export default function Games() {
         </div>
       )}
 
-      <div className="flex justify-center mt-5 space-x-2">
+      <div className="flex justify-center mt-16 space-x-2">
         {/* Föregående knapp */}
         <button
           onClick={() => handlePageChange(page - 1)}

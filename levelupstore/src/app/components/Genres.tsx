@@ -1,7 +1,8 @@
 "use client"; // 🔥 Gör detta till en Client Component
 
-import { useState, useEffect } from "react";
 import Link from "next/link";
+import Image from "next/image";
+import { useState, useEffect } from "react";
 import { fetchGenres } from "../lib/fetcher";
 import { Genres as GenresType } from "../types/genres";
 
@@ -11,11 +12,9 @@ export default function Genres() {
   const [error, setError] = useState<string | null>(null); // Hanterar API-fel
 
   useEffect(() => {
-    console.log("GenresPage loaded!");
     async function loadGenres() {
       try {
         const data = await fetchGenres();
-        console.log("GENRES", data.results); // 🔍 Debug-logg
         setGenres(data.results);
       } catch (err) {
         console.error("Error fetching genres:", err);
@@ -28,7 +27,7 @@ export default function Genres() {
     loadGenres();
   }, []);
 
-  if (loading) return <p className="text-custom">Laddar genrer...</p>;
+  if (loading) return <p className="text-custom">Loading genre...</p>;
   if (error) return <p className="text-red-500">{error}</p>;
 
   return (
@@ -37,10 +36,13 @@ export default function Genres() {
         {genres.map((genre) => (
           <li key={genre.id} className="text-custom">
             <Link href={`/genres/${genre.id}`} className="flex mb-6 text-custom items-center">
-              <img
+              <Image
                 src={genre.image_background}
                 alt={`${genre.name} image`}
+                width={400}
+                height={225}
                 className="aspect-square object-cover size-12 md:size-10 rounded-xl mr-2 text-justify"
+                priority={false}
               />
               <p className="text-custom text-xl hover:text-[#7a7a7a] hover:underline underline-offset-8">
                 {genre.name}

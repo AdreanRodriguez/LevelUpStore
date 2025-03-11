@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 
 export default function GameModal({ product }: { product: any }) {
@@ -21,7 +22,11 @@ export default function GameModal({ product }: { product: any }) {
           Close
         </Link>
         <h1 className="text-2xl font-bold mb-4 text-custom font-righteous">{product.name}</h1>
-        <img
+        <Image
+          width={400}
+          height={225}
+          priority={false}
+          loading="lazy"
           src={product.background_image}
           alt={product.name}
           className="rounded mb-4 w-full h-64 object-cover"

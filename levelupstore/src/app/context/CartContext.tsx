@@ -1,1 +1,0 @@
-// Contect för kundvagnsdata

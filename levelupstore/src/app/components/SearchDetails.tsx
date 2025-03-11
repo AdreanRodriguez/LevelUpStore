@@ -1,10 +1,10 @@
 "use client";
 
+import Image from "next/image";
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import { Product } from "@/app/types/product";
 import { fetchGameById } from "@/app/lib/fetcher";
-import Image from "next/image";
 
 export default function SearchDetails() {
   const { id } = useParams();
@@ -54,8 +54,8 @@ export default function SearchDetails() {
         alt={`Background image for ${game.name}`}
         width={300}
         height={100}
+        priority={false}
         className={` ${game.background_image ? "w-full h-auto mb-4" : "mx-auto pb-20"}`}
-        unoptimized
       />
       <article className="grid grid-cols-[repeat(auto-fit,minmax(200px,1fr))] gap-4 flex-1 ml-0 md:ml-16">
         <p className="mb-2 ">Rating: {game.rating}</p>

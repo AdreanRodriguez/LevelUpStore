@@ -1,1 +1,0 @@
-// Hantera kundvagnens state

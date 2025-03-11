@@ -1,6 +1,6 @@
 import Link from "next/link";
-import { FaFacebook, FaInstagram } from "react-icons/fa";
 import { FaXTwitter } from "react-icons/fa6";
+import { FaFacebook, FaInstagram } from "react-icons/fa";
 
 export default function Footer() {
   return (
@@ -70,7 +70,6 @@ export default function Footer() {
               <FaXTwitter />
             </a>
           </div>
-          <h3 className="text-xl font-semibold mb-4">Newsletter</h3>
         </div>
       </div>
 

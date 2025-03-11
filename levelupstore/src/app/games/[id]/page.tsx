@@ -1,5 +1,5 @@
 import GamesDetails from "@/app/components/GamesDetails";
 
-export default async function GameIdPage({ params }: { params: Promise<{ id: string }> }) {
+export default async function GameIdPage({ params }: { params: { id: string } }) {
   return <GamesDetails params={params} />;
 }
