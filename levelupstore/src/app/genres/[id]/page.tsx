@@ -30,8 +30,8 @@ export default function GenreDetailPage() {
         setGenre(fetchedGenre);
 
         const gamesResponse: ProductApiResponse<Product> = await fetchGames();
+
         const filteredGames = gamesResponse.results.filter((game) => game.genres?.some((g) => g.id === Number(fetchedGenre.id)));
-        console.log(filteredGames);
 
         setGames(filteredGames);
       } catch (error) {
@@ -52,5 +52,5 @@ export default function GenreDetailPage() {
     return <p className="text-red-500">Genre not found</p>;
   }
 
-  return <GenreDetailsClient games={games} genreName={genre.name} genreId={genre.id} genreImage={genre.image_background} />;
+  return <GenreDetailsClient games={games} genreName={genre.name} genreImage={genre.image_background} />;
 }

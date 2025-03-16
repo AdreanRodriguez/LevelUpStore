@@ -2,9 +2,18 @@ import { atom } from "jotai";
 import { Product } from "../types/product";
 import { Genres } from "../types/genres";
 
+// Funktion för att beräkna pris baserat på released-året
+function getPriceByYear(year: number): number {
+  if (year >= 2020) return 59.99;
+  if (year >= 2015) return 49.99;
+  if (year >= 2010) return 39.99;
+  return 9.99;
+}
+
 // Skapa separata CartItem-typer för produkter och genrer
 export interface CartItemProduct extends Product {
   quantity: number;
+  price: number; // 🔥 Lägg till price
 }
 
 export interface CartItemGenre extends Genres {
@@ -35,8 +44,16 @@ export const addToCartAtom = atom(null, (get, set, item: Product | Genres) => {
       cart.map((cartItem) => (cartItem.id === item.id ? { ...cartItem, quantity: cartItem.quantity + 1 } : cartItem))
     );
   } else {
-    // Skapa rätt typ baserat på om `item` är en `Product` eller `Genres`
-    const newItem: CartItem = "rating" in item ? { ...(item as Product), quantity: 1 } : { ...(item as Genres), quantity: 1 };
+    // Beräkna pris endast om det är ett Product (spel)
+    const isGame = "released" in item;
+    const newItem: CartItem = isGame
+      ? {
+          ...(item as Product),
+          quantity: 1,
+          price: getPriceByYear(new Date(item.released).getFullYear()), // Lägger till pris
+        }
+      : { ...(item as Genres), quantity: 1 };
+
     set(cartAtom, [...cart, newItem]);
   }
 
