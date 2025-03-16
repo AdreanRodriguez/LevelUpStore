@@ -7,13 +7,13 @@ import { Product } from "@/app/types/product";
 import { addToCartAtom, clickedButtonAtom } from "../store/cart";
 
 interface GenreDetailsClientProps {
-  games: Product[];
+  games?: Product[]; // Säkerställ att `games` kan vara undefined
   genreName: string;
   genreId: number;
   genreImage: string;
 }
 
-export default function GenreDetailsClient({ games, genreName, genreId, genreImage }: GenreDetailsClientProps) {
+export default function GenreDetailsClient({ games = [], genreName, genreId, genreImage }: GenreDetailsClientProps) {
   const [, addToCart] = useAtom(addToCartAtom);
   const [clickedButton] = useAtom(clickedButtonAtom);
 
@@ -21,6 +21,15 @@ export default function GenreDetailsClient({ games, genreName, genreId, genreIma
 
   function handleBuyButton(game: Product) {
     addToCart(game);
+  }
+
+  if (!games || games.length === 0) {
+    return (
+      <div className="text-center p-5">
+        <h1 className="text-3xl font-bold text-red-500">No games found for {genreName}</h1>
+        <p className="text-lg text-gray-500">Try searching for another genre.</p>
+      </div>
+    );
   }
 
   return (

@@ -35,8 +35,8 @@ export const addToCartAtom = atom(null, (get, set, item: Product | Genres) => {
       cart.map((cartItem) => (cartItem.id === item.id ? { ...cartItem, quantity: cartItem.quantity + 1 } : cartItem))
     );
   } else {
-    // Skapa antingen en CartItemProduct eller CartItemGenre
-    const newItem: CartItem = { ...item, quantity: 1 } as CartItem;
+    // Skapa rätt typ baserat på om `item` är en `Product` eller `Genres`
+    const newItem: CartItem = "rating" in item ? { ...(item as Product), quantity: 1 } : { ...(item as Genres), quantity: 1 };
     set(cartAtom, [...cart, newItem]);
   }
 

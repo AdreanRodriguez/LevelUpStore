@@ -1,5 +1,5 @@
-import GamesDetails from "@/app/components/GamesDetails";
+import GamesDetailsClient from "@/app/components/GamesDetailsClient";
 
-export default function GameIdPage({ params }: { params: { id: string } }) {
-  return <GamesDetails gameId={params.id} />;
+export default function GameIdPage() {
+  return <GamesDetailsClient />;
 }

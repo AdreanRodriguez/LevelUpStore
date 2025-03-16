@@ -2,7 +2,6 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { useAtom } from "jotai";
 import FilterToggle from "./FilterToggle";
 import GenresPage from "@/app/genres/page";
 import { useState, useEffect } from "react";
@@ -10,12 +9,10 @@ import { Product } from "@/app/types/product";
 import { fetchGames } from "@/app/lib/fetcher";
 import getPriceByYear from "../utils/getPriceByYear";
 import { useSearchParams, useRouter } from "next/navigation";
-import { addToCartAtom, clickedButtonAtom } from "./../store/cart";
+import BuyButton from "./BuyButton";
+import Loading from "../loading";
 
 export default function Games() {
-  const [, addToCart] = useAtom(addToCartAtom);
-  const [clickedButton] = useAtom(clickedButtonAtom);
-
   const router = useRouter();
   const searchParams = useSearchParams();
 
@@ -75,10 +72,6 @@ export default function Games() {
     }
   };
 
-  function handleBuyButton(product: Product) {
-    addToCart(product);
-  }
-
   return (
     <section className="p-5 px-2 min-h-screen bg-custom font-righteous flex flex-col">
       <FilterToggle>
@@ -86,7 +79,7 @@ export default function Games() {
       </FilterToggle>
 
       {loading ? (
-        <p className="text-center text-lg">Loading games...</p>
+        <Loading />
       ) : (
         <div className="grid grid-cols-autoFit gap-4 flex-1">
           {games.map((product) => {
@@ -118,13 +111,7 @@ export default function Games() {
                       </span>
                     )}
                   </div>
-
-                  <button
-                    onClick={() => handleBuyButton(product)}
-                    className={`text-white font-bold  py-2 px-4 rounded ${clickedButton === product.id ? "bg-green-500 scale-105" : "bg-orange-500 hover:bg-orange-600"}`}
-                  >
-                    BUY NOW
-                  </button>
+                  <BuyButton item={product} />
                 </div>
               </div>
             );
