@@ -8,12 +8,13 @@ import GenresPage from "@/app/genres/page";
 import { useState, useEffect } from "react";
 import { Product } from "@/app/types/product";
 import { fetchGames } from "@/app/lib/fetcher";
-import { addToCartAtom } from "./../store/cart";
 import getPriceByYear from "../utils/getPriceByYear";
 import { useSearchParams, useRouter } from "next/navigation";
+import { addToCartAtom, clickedButtonAtom } from "./../store/cart";
 
 export default function Games() {
-  const [, addToCart] = useAtom(addToCartAtom); // Hämta addToCart-funktionen
+  const [, addToCart] = useAtom(addToCartAtom);
+  const [clickedButton] = useAtom(clickedButtonAtom);
 
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -21,37 +22,51 @@ export default function Games() {
   const [loading, setLoading] = useState(true);
   const [totalPages, setTotalPages] = useState(1);
   const [games, setGames] = useState<Product[]>([]);
+  const [maxVisiblePages, setMaxVisiblePages] = useState(10); // Dynamisk synliga sidor
 
   const page = Number(searchParams.get("page")) || 1;
 
   const MAX_PAGES = 12;
-  const MAX_VISIBLE_PAGES = 10;
 
-  const startPage = Math.max(1, page - Math.floor(MAX_VISIBLE_PAGES / 2));
-  const endPage = Math.min(totalPages, startPage + MAX_VISIBLE_PAGES - 1);
+  useEffect(() => {
+    // Skapar en Abortcontroller för att undvika race conditions eller onödiga nätverksanrop.
+    const controller = new AbortController();
+    const signal = controller.signal; // Hämtar signalen som används för att avbryta fetch-anrop
+
+    async function getGames() {
+      setLoading(true);
+      try {
+        const data = await fetchGames(page, signal);
+        setGames(data.results);
+        const calculatedPages = data.count ? Math.ceil(data.count / 10) : 1;
+        setTotalPages(Math.min(calculatedPages, MAX_PAGES));
+      } catch (error) {
+        // Om anropet avbröts med `AbortController`, logga det som debug istället för error
+        if (error instanceof Error) {
+          if (error.name !== "AbortError") {
+            console.error("Error fetching games:", error.message);
+          }
+        } else {
+          console.error("Unknown error fetching games", error); // Hanterar andra fel normalt
+        }
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    getGames();
+
+    // Cleanup funktion. Om komponenten avmonteras eller `page` ändras, avbryt det pågående fetch-anropet
+    return () => controller.abort(); // Avbryt om sidan byts
+  }, [page]);
+
+  const startPage = Math.max(1, page - Math.floor(maxVisiblePages / 2));
+  const endPage = Math.min(totalPages, startPage + maxVisiblePages - 1);
 
   const pages = [];
   for (let i = startPage; i <= endPage; i++) {
     pages.push(i);
   }
-
-  useEffect(() => {
-    async function getGames() {
-      setLoading(true);
-      try {
-        const data = await fetchGames(page);
-
-        setGames(data.results);
-        const calculatedPages = data.count ? Math.ceil(data.count / 10) : 1;
-        setTotalPages(Math.min(calculatedPages, MAX_PAGES));
-      } catch (error) {
-        console.error("Error fetching games:", error);
-      } finally {
-        setLoading(false);
-      }
-    }
-    getGames();
-  }, [page]);
 
   const handlePageChange = (newPage: number) => {
     if (newPage !== page) {
@@ -59,6 +74,10 @@ export default function Games() {
       window.scrollTo(0, 0);
     }
   };
+
+  function handleBuyButton(product: Product) {
+    addToCart(product);
+  }
 
   return (
     <section className="p-5 px-2 min-h-screen bg-custom font-righteous flex flex-col">
@@ -71,59 +90,28 @@ export default function Games() {
       ) : (
         <div className="grid grid-cols-autoFit gap-4 flex-1">
           {games.map((product) => {
-            const releaseYear =
-              product.released && product.released !== "N/A"
-                ? new Date(product.released).getFullYear()
-                : "N/A";
-            const price =
-              releaseYear !== "N/A" && typeof releaseYear === "number"
-                ? `$${getPriceByYear(releaseYear).toFixed(2)}`
-                : "N/A";
+            const releaseYear = product.released && product.released !== "N/A" ? new Date(product.released).getFullYear() : "N/A";
+            const price = releaseYear !== "N/A" && typeof releaseYear === "number" ? `$${getPriceByYear(releaseYear).toFixed(2)}` : "N/A";
 
             return (
-              <div
-                key={product.id}
-                className="p-4 border rounded shadow hover:shadow-lg bg-card text-custom flex flex-col justify-between"
-              >
+              <div key={product.id} className="p-4 border rounded shadow hover:shadow-lg bg-card text-custom flex flex-col justify-between">
                 <Link href={`/games/${product.id}`} className="block">
                   <figure className="aspect-video">
-                    <Image
-                      src={product.background_image}
-                      alt={product.name}
-                      width={400}
-                      height={225}
-                      priority={false}
-                      className="rounded mb-3 w-full h-full"
-                    />
+                    <Image src={product.background_image} alt={product.name} width={400} height={225} priority={false} className="rounded mb-3 w-full h-full" />
                   </figure>
                   <h2 className="text-xl font-bold">{product.name}</h2>
                 </Link>
 
                 <p className="text-xl text-custom">Rating: ⭐({product.rating})</p>
-                <p
-                  className={`p-5 flex justify-end font-bold text-2xl ${
-                    typeof releaseYear === "number" && releaseYear < 2010
-                      ? "text-red-500"
-                      : "text-black dark:text-[#e2e2e2]"
-                  }`}
-                >
+                <p className={`pt-8 pr-5 pl-5 pb-4 flex justify-end font-bold text-2xl ${typeof releaseYear === "number" && releaseYear < 2010 ? "text-red-500" : "text-black dark:text-[#e2e2e2]"}`}>
                   {price}
                 </p>
 
                 <div className="flex justify-between items-center">
                   <div className="flex space-x-2 mt-2 text-custom justify-end items-center">
                     {product.parent_platforms?.slice(0, 4).map(({ platform }) => (
-                      <Image
-                        width={24}
-                        height={24}
-                        priority={false}
-                        key={platform.id}
-                        alt={platform.name}
-                        className="invert dark:invert-0"
-                        src={`/platform/${platform.id}.svg`}
-                      />
+                      <Image width={24} height={24} priority={false} key={platform.id} alt={platform.name} className="invert dark:invert-0" src={`/platform/${platform.id}.svg`} />
                     ))}
-                    {/* Om det finns fler än 4 plattformar, lägg till "..." */}
                     {product.parent_platforms?.length > 4 && (
                       <span className="flex items-end">
                         <p className="text-xl">...</p>
@@ -132,8 +120,8 @@ export default function Games() {
                   </div>
 
                   <button
-                    onClick={() => addToCart(product)}
-                    className="text-white font-bold bg-orange-500 hover:bg-orange-600 py-2 px-4 rounded"
+                    onClick={() => handleBuyButton(product)}
+                    className={`text-white font-bold  py-2 px-4 rounded ${clickedButton === product.id ? "bg-green-500 scale-105" : "bg-orange-500 hover:bg-orange-600"}`}
                   >
                     BUY NOW
                   </button>
@@ -144,42 +132,34 @@ export default function Games() {
         </div>
       )}
 
-      <div className="flex justify-center mt-16 space-x-2">
-        {/* Föregående knapp */}
+      {/* Pagination */}
+      <div className="flex flex-wrap justify-center lg:text-xl sm:text-sm items-center  sm:gap-x-2 sm:gap-y-2 mt-16 space-x-2">
         <button
           onClick={() => handlePageChange(page - 1)}
           disabled={page <= 1}
-          className="px-4 py-2 border rounded bg-gray-200 disabled:opacity-50 hover:bg-gray-300 transition"
+          className="sm:px-4 px-2 sm:py-2 py-1 border rounded bg-gray-200 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-300 transition"
         >
           Previous
         </button>
 
-        {/* Om vi inte är på första sidan, visa "..." */}
-        {startPage > 1 && <span className="px-4 py-2">...</span>}
+        {startPage > 1 && <span className="pt-4 sm:inline dark:text-white">...</span>}
 
-        {/* Visa endast de 10 aktuella sidorna */}
         {pages.map((p) => (
           <button
             key={p}
             onClick={() => handlePageChange(p)}
-            className={`px-4 py-2 border rounded transition ${
-              p === page
-                ? "bg-gray-900 text-white border-gray-700"
-                : "bg-gray-200 hover:bg-gray-300 hover:scale-110"
-            }`}
+            className={`px-1 sm:px-4 py-1 sm:py-2 border rounded transition ${p === page ? "bg-gray-900 text-white border-gray-700" : "bg-gray-200 hover:bg-gray-300 hover:scale-105"}`}
           >
             {p}
           </button>
         ))}
 
-        {/* Om vi har fler sidor kvar, visa "..." */}
-        {endPage < totalPages && <span className="px-4 py-2">...</span>}
+        {endPage < totalPages && <span className="pt-4 sm:inline dark:text-white">...</span>}
 
-        {/* Nästa knapp */}
         <button
           onClick={() => handlePageChange(page + 1)}
           disabled={page >= totalPages}
-          className="px-4 py-2 border rounded bg-gray-200 disabled:opacity-50 hover:bg-gray-300 transition"
+          className="sm:px-4 px-1 sm:py-2 py-1 border rounded bg-gray-300 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-300 transition"
         >
           Next
         </button>

@@ -1,4 +1,4 @@
-"use client"; // 🔥 Gör detta till en Client Component
+"use client"; // Gör detta till en Client Component
 
 import Link from "next/link";
 import Image from "next/image";
@@ -12,19 +12,28 @@ export default function Genres() {
   const [error, setError] = useState<string | null>(null); // Hanterar API-fel
 
   useEffect(() => {
+    // Skapar en ny AbortController för att kunna avbryta nätverksanrop
+    const controller = new AbortController();
+    const signal = controller.signal; // Hämtar signalen som används för att avbryta fetch-anrop
+
     async function loadGenres() {
       try {
-        const data = await fetchGenres();
+        const data = await fetchGenres(signal);
         setGenres(data.results);
-      } catch (err) {
-        console.error("Error fetching genres:", err);
-        setError("Error loading genres");
+      } catch (error) {
+        if (error instanceof Error && error.name !== "AbortError") {
+          console.error("Error fetching genres:", error);
+          setError("Error loading genres");
+        }
       } finally {
         setLoading(false);
       }
     }
 
     loadGenres();
+
+    // Cleanup funktion. Om komponenten avmonteras eller `page` ändras, avbryt det pågående fetch-anropet
+    return () => controller.abort(); // Avbryt anrop om användaren lämnar sidan
   }, []);
 
   if (loading) return <p className="text-custom">Loading genre...</p>;
@@ -32,7 +41,7 @@ export default function Genres() {
 
   return (
     <div className="text-3xl font-bold mb-4 text-custom pl-2">
-      <ul className="text-custom font-righteous grid grid-cols-[repeat(auto-fill,minmax(160px,1fr))]">
+      <ul className="text-custom font-righteous grid grid-cols-[repeat(auto-fill,minmax(160px,1fr))] text-center">
         {genres.map((genre) => (
           <li key={genre.id} className="text-custom">
             <Link href={`/genres/${genre.id}`} className="flex mb-6 text-custom items-center">
@@ -44,9 +53,7 @@ export default function Genres() {
                 className="aspect-square object-cover size-12 md:size-10 rounded-xl mr-2 text-justify"
                 priority={false}
               />
-              <p className="text-custom text-xl hover:text-[#7a7a7a] hover:underline underline-offset-8">
-                {genre.name}
-              </p>
+              <p className="text-custom text-xl hover:text-[#7a7a7a] hover:underline underline-offset-8">{genre.name}</p>
             </Link>
           </li>
         ))}

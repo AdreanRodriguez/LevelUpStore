@@ -12,6 +12,10 @@ export default function SearchDetails() {
   const [game, setGame] = useState<Product | null>(null);
 
   useEffect(() => {
+    // Skapar en ny AbortController för att kunna avbryta nätverksanrop
+    const controller = new AbortController();
+    const signal = controller.signal; // Hämtar signalen som används för att avbryta fetch-anrop
+
     const fetchGameDetails = async () => {
       const gameId = Number(id); // Konvertera `id` till ett nummer om det behövs
       if (!gameId) {
@@ -22,18 +26,25 @@ export default function SearchDetails() {
       setLoading(true);
 
       try {
-        const data = await fetchGameById(gameId); // Återanvänd `fetchGameById`
-        console.log(data);
+        const data = await fetchGameById(gameId, signal); // Återanvänd `fetchGameById`
+        // console.log(data);
 
         setGame(data);
       } catch (error) {
-        console.error("Failed to fetch game details:", error);
+        // Om anropet avbröts med `AbortController`, logga det som debug istället för error
+        if (error instanceof Error && error.name !== "AbortError") {
+          console.error("Failed to fetch game details:", error);
+        } else {
+          console.error("An unknown error occurred:", error); // Logga om felet inte är av typen Error
+        }
       } finally {
         setLoading(false);
       }
     };
 
     fetchGameDetails();
+
+    return () => controller.abort(); // Avbryt anrop om id ändras eller komponenten avmonteras
   }, [id]);
 
   if (loading) {

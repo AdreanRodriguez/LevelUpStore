@@ -15,26 +15,35 @@ export default function Search() {
   const [results, setResults] = useState<Product[]>([]);
 
   useEffect(() => {
+    // Skapar en ny AbortController för att kunna avbryta nätverksanrop
+    const controller = new AbortController(); // För att undvika race conditions eller onödiga nätverksanrop.
+    const signal = controller.signal;
+
     const fetchResults = async () => {
       if (!query) {
-        console.log("Ingen query");
+        console.error("No query - no searchresult.");
         return;
       }
 
       setLoading(true);
 
       try {
-        const { results } = await fetchSearchedGames(query);
+        const { results } = await fetchSearchedGames(query, signal);
         setResults(results || []); // Sätt resultatet, även om det är en tom array
       } catch (error) {
-        console.error("Error fetching search results:", error);
-        setResults([]); // Hantera fel genom att sätta tom lista
+        if (error instanceof Error && error.name !== "AbortError") {
+          console.error("Error fetching search results:", error);
+          setResults([]); // Hantera fel genom att sätta tom lista
+        }
       } finally {
         setLoading(false); // Avsluta loading oavsett om det är framgång eller fel
       }
     };
 
     fetchResults();
+
+    // Cleanup funktion. Om komponenten avmonteras eller `page` ändras, avbryt det pågående fetch-anropet
+    return () => controller.abort(); // Avbryt anrop om komponenten avmonteras eller query ändras
   }, [query]);
 
   const fallbackImage = "/fallbackImage.svg";
@@ -50,20 +59,11 @@ export default function Search() {
       ) : results && results.length > 0 ? (
         <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {results.map((result) => {
-            const releaseYear =
-              result.released && result.released !== "N/A"
-                ? new Date(result.released).getFullYear()
-                : "N/A";
+            const releaseYear = result.released && result.released !== "N/A" ? new Date(result.released).getFullYear() : "N/A";
 
-            const price =
-              releaseYear !== "N/A" && typeof releaseYear === "number"
-                ? `$${getPriceByYear(releaseYear).toFixed(2)}`
-                : "N/A";
+            const price = releaseYear !== "N/A" && typeof releaseYear === "number" ? `$${getPriceByYear(releaseYear).toFixed(2)}` : "N/A";
             return (
-              <li
-                key={result.id}
-                className="block p-4 border rounded shadow hover:shadow-lg bg-card text-custom"
-              >
+              <li key={result.id} className="block p-4 border rounded shadow hover:shadow-lg bg-card text-custom">
                 <Link href={`/search/${result.id}`}>
                   <figure className="aspect-video">
                     <Image
@@ -71,9 +71,7 @@ export default function Search() {
                       alt={`background image for ${result.name}`}
                       width={500}
                       height={300}
-                      className={`rounded mb-3 w-full h-full ${
-                        result.background_image ? "object-cover" : "object-contain p-5"
-                      }`}
+                      className={`rounded mb-3 w-full h-full ${result.background_image ? "object-cover" : "object-contain p-5"}`}
                       onError={(e) => {
                         (e.target as HTMLImageElement).src = fallbackImage;
                       }}
@@ -83,15 +81,7 @@ export default function Search() {
                   <h2 className="text-xl font-semibold">{result.name}</h2>
                   <p className="text-sm text-gray-500">Rating: {result.rating}</p>
                   <p className="text-xl">{releaseYear}</p>
-                  <p
-                    className={`text-xl font-bold pt-5 ${
-                      typeof releaseYear === "number" && releaseYear < 2010
-                        ? "text-red-500"
-                        : "text-ellipsis"
-                    }`}
-                  >
-                    {price}
-                  </p>
+                  <p className={`text-xl font-bold pt-5 ${typeof releaseYear === "number" && releaseYear < 2010 ? "text-red-500" : "text-ellipsis"}`}>{price}</p>
                 </Link>
               </li>
             );

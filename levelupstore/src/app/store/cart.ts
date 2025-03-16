@@ -1,42 +1,58 @@
 import { atom } from "jotai";
 import { Product } from "../types/product";
+import { Genres } from "../types/genres";
 
-// 🛒 CartItem är en produkt men har också "quantity"
-export interface CartItem extends Product {
+// Skapa separata CartItem-typer för produkter och genrer
+export interface CartItemProduct extends Product {
   quantity: number;
 }
 
-// Kundvagnens atom
+export interface CartItemGenre extends Genres {
+  quantity: number;
+}
+
+// Kundvagnen kan innehålla både produkter och genrer
+export type CartItem = CartItemProduct | CartItemGenre;
+
+// Atom för kundvagnens innehåll
 export const cartAtom = atom<CartItem[]>([]);
 
-// Räkna antal produkter i kundvagnen
-export const cartCountAtom = atom((get) =>
-  get(cartAtom).reduce((total, item) => total + item.quantity, 0)
-);
+// Håll koll på vilken "BUY NOW" knapp som klickats
+export const clickedButtonAtom = atom<number | null>(null);
 
-// Lägga till en produkt i kundvagnen (öka quantity om den redan finns)
-export const addToCartAtom = atom(null, (get, set, product: Product) => {
+// Räkna antal produkter i kundvagnen
+export const cartCountAtom = atom((get) => get(cartAtom).reduce((total, item) => total + item.quantity, 0));
+
+// Lägga till en produkt eller genre i kundvagnen
+export const addToCartAtom = atom(null, (get, set, item: Product | Genres) => {
   const cart = get(cartAtom);
-  const existingItem = cart.find((item) => item.id === product.id);
+  const existingItem = cart.find((cartItem) => cartItem.id === item.id);
 
   if (existingItem) {
-    // Öka quantity om produkten finns
+    // Öka quantity om produkten eller genren redan finns
     set(
       cartAtom,
-      cart.map((item) => (item.id === product.id ? { ...item, quantity: item.quantity + 1 } : item))
+      cart.map((cartItem) => (cartItem.id === item.id ? { ...cartItem, quantity: cartItem.quantity + 1 } : cartItem))
     );
   } else {
-    // Lägg till ny produkt med quantity: 1
-    set(cartAtom, [...cart, { ...product, quantity: 1 }]);
+    // Skapa antingen en CartItemProduct eller CartItemGenre
+    const newItem: CartItem = { ...item, quantity: 1 } as CartItem;
+    set(cartAtom, [...cart, newItem]);
   }
+
+  // Uppdatera clickedButtonAtom med item.id
+  set(clickedButtonAtom, item.id);
+
+  // Återställ clickedButton efter 1 sekund
+  setTimeout(() => {
+    set(clickedButtonAtom, null);
+  }, 1000);
 });
 
-// Ta bort en produkt eller minska quantity
+// Ta bort en produkt eller genre från kundvagnen
 export const removeFromCartAtom = atom(null, (get, set, id: number) => {
   const cart = get(cartAtom);
-  const updatedCart = cart
-    .map((item) => (item.id === id ? { ...item, quantity: item.quantity - 1 } : item))
-    .filter((item) => item.quantity > 0);
+  const updatedCart = cart.map((item) => (item.id === id ? { ...item, quantity: item.quantity - 1 } : item)).filter((item) => item.quantity > 0);
 
   set(cartAtom, updatedCart);
 });

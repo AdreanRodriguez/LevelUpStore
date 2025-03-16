@@ -18,7 +18,7 @@ export default function ThemeProvider({ children, ...props }: CustomThemeProvide
   }, []);
 
   if (!mounted) {
-    return <>{children}</>; // Returnera endast barn tills komponenten är monterad
+    return <>{children}</>; // Returnera endast children tills komponenten är monterad
   }
 
   return <NextThemesProvider {...props}>{children}</NextThemesProvider>;

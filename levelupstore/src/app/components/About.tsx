@@ -8,9 +8,10 @@ export default function About() {
         <p className="text-custom text-lg mb-8">
           Welcome to <span className="font-semibold">LevelUpStore</span>, the ultimate destination
           for gamers who demand the best. We are more than just an online store – we are a
-          **community built by gamers, for gamers**. Whether you’re searching for the **latest AAA
-          titles**, timeless classics, or exclusive collector’s editions, you’ll find everything you
-          need to take your gaming experience to the **next level**.
+          <span className="font-semibold"> community built by gamers, for gamers</span>. Whether
+          you’re searching for the <span className="font-semibold">latest AAA titles</span>,
+          timeless classics, or exclusive collector’s editions, you’ll find everything you need to
+          take your gaming experience to the <span className="font-semibold">next level</span>.
         </p>
 
         <h2 className="text-2xl font-semibold text-orange-400 mb-4">Our Mission</h2>
