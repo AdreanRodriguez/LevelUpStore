@@ -1,5 +1,4 @@
 import { Genres, GenresListResponse } from "@/app/types/genres";
-import { Platform, PlatformApiResponse } from "../types/platforms";
 import { ProductApiResponse, Product, ProductListResponse } from "@/app/types/product";
 
 const localhostURL = "http://localhost:3000";

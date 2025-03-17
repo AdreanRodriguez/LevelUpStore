@@ -88,7 +88,7 @@ export default function SearchBar() {
   };
 
   return (
-    <div className="relative w-full" ref={dropdownRef}>
+    <div className="relative w-full mt-3" ref={dropdownRef}>
       <input
         type="text"
         id="inputField"

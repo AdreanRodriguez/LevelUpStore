@@ -95,7 +95,7 @@ export default function Games() {
                   <h2 className="text-xl font-bold">{product.name}</h2>
                 </Link>
 
-                <p className="text-xl text-custom">Rating: ⭐({product.rating})</p>
+                <p className="text-xl text-custom pt-2 pb-2">Rating: ⭐({product.rating})</p>
                 <p className={`pt-8 pr-5 pl-5 pb-4 flex justify-end font-bold text-2xl ${typeof releaseYear === "number" && releaseYear < 2010 ? "text-red-500" : "text-black dark:text-[#e2e2e2]"}`}>
                   {price}
                 </p>
