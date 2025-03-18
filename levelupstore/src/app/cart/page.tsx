@@ -3,15 +3,13 @@
 import Link from "next/link";
 import Image from "next/image";
 import { useAtom } from "jotai";
-import { addToCartAtom, cartAtom, removeFromCartAtom } from "../store/cart";
+import { addToCartAtom, cartAtom, cartTotalPriceAtom, removeFromCartAtom } from "../store/cart";
 
 export default function CartPage() {
   const [cart] = useAtom(cartAtom);
-  const [, removeFromCart] = useAtom(removeFromCartAtom);
   const [, addToCart] = useAtom(addToCartAtom);
-
-  // Beräkna total kostnad
-  const totalPrice = cart.reduce((total, item) => ("price" in item ? total + item.price * item.quantity : total), 0);
+  const [totalPrice] = useAtom(cartTotalPriceAtom);
+  const [, removeFromCart] = useAtom(removeFromCartAtom);
 
   return (
     <div className="p-5 text-custom min-h-screen">
@@ -32,7 +30,7 @@ export default function CartPage() {
 
                 <div className="flex-1 sm:ml-4 text-center sm:text-left">
                   <h2 className="text-xl font-semibold">{item.name}</h2>
-                  {"price" in item && <p className="text-lg lg:text-left lg:ml-0 lg:mt-2 sm:text-center sm:m-3 font-bold mt-2">${item.price.toFixed(2)}</p>}
+                  {"price" in item && <p className=" text-lg lg:text-left lg:ml-0 lg:mt-2 sm:text-center m-3 font-bold mt-2">${item.price.toFixed(2)}</p>}
                 </div>
 
                 <div className="flex items-center space-x-4">
@@ -48,9 +46,11 @@ export default function CartPage() {
             ))}
           </ul>
 
-          {/* Total kostnad och checkout knapp */}
           <div className="mt-6 text-center">
-            <p className="text-xl font-bold">Total: ${totalPrice.toFixed(2)}</p>
+            <p className="text-xl font-bold ">
+              Total:
+              <span className="text-rose-500"> ${totalPrice.toFixed(2)}</span>
+            </p>
             <Link href={"/checkout"} className="mt-4 inline-block bg-blue-500 text-white font-bold py-3 px-6 rounded hover:bg-blue-600 transition">
               Proceed to Checkout
             </Link>
