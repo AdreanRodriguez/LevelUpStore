@@ -1,6 +1,7 @@
 "use client";
-import { ThemeProvider as NextThemesProvider, ThemeProviderProps } from "next-themes";
+
 import { ReactNode, useEffect, useState } from "react";
+import { ThemeProvider as NextThemesProvider, ThemeProviderProps } from "next-themes";
 
 interface CustomThemeProviderProps extends Omit<ThemeProviderProps, "attribute"> {
   children: ReactNode;
@@ -17,7 +18,7 @@ export default function ThemeProvider({ children, ...props }: CustomThemeProvide
   }, []);
 
   if (!mounted) {
-    return <>{children}</>; // Returnera endast barn tills komponenten är monterad
+    return <>{children}</>; // Returnera endast children tills komponenten är monterad
   }
 
   return <NextThemesProvider {...props}>{children}</NextThemesProvider>;

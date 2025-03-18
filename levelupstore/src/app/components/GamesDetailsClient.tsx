@@ -1,12 +1,36 @@
+"use client";
+
 import Image from "next/image";
+import { useParams } from "next/navigation";
+import { useEffect, useState } from "react";
+import { Product } from "@/app/types/product";
 import { fetchGameById } from "@/app/lib/fetcher";
+import BuyButton from "./BuyButton";
 
-export default async function GamesDetails({ gameId }: { gameId: string }) {
-  if (!gameId) {
-    throw new Error("Game ID is missing in the route parameters.");
-  }
+export default function GamesDetailsClient() {
+  const params = useParams();
+  const [game, setGame] = useState<Product | null>(null);
+  const [loading, setLoading] = useState(true);
 
-  const game = await fetchGameById(gameId);
+  useEffect(() => {
+    if (!params?.id) return;
+
+    async function fetchGame() {
+      try {
+        const fetchedGame = await fetchGameById(params.id as string);
+        setGame(fetchedGame);
+      } catch (error) {
+        console.error("Error fetching game:", error);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    fetchGame();
+  }, [params.id]);
+
+  if (loading) return <p className="text-custom">Loading game...</p>;
+  if (!game) return <p className="text-red-500">Game not found</p>;
 
   const fallbackImage = "/fallbackImage.svg";
 
@@ -25,6 +49,11 @@ export default async function GamesDetails({ gameId }: { gameId: string }) {
       <p className="text-gray-700 font-bold text-custom font-righteous">
         Released: <span className="font-thin">{game.released || "No release date available"}</span>
       </p>
+
+      <div className="mt-6">
+        <BuyButton item={game} />
+      </div>
+
       <p className="mt-4 text-gray-500 font-bold">
         <span className="font-semibold text-custom">{game.description_raw || "No description available."}</span>
       </p>

@@ -15,6 +15,10 @@ export default function SearchBar() {
   const dropdownRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
+    // Skapar en ny AbortController för att kunna avbryta nätverksanrop
+    const controller = new AbortController();
+    const signal = controller.signal; // Hämtar signalen som används för att avbryta fetch-anrop
+
     const fetchResults = async () => {
       if (searchQuery.trim() === "") {
         setSearchResults([]);
@@ -22,17 +26,33 @@ export default function SearchBar() {
       }
 
       setLoading(true);
-      const { results } = await fetchSearchedGames(searchQuery);
-      setSearchResults(results.slice(0, 10)); // Visa max 10 resultat
-      setIsDropdownOpen(true);
-      setLoading(false);
+
+      try {
+        const { results } = await fetchSearchedGames(searchQuery, signal);
+        setSearchResults(results.slice(0, 10)); // Visa max 10 resultat
+        setIsDropdownOpen(true);
+      } catch (error) {
+        if (error instanceof Error && error.name !== "AbortError") {
+          console.error("Error fetching search results:", error);
+          setSearchResults([]);
+        }
+      } finally {
+        setLoading(false);
+      }
     };
 
     const timeoutResult = setTimeout(fetchResults, 300); // Debounce
-    return () => clearTimeout(timeoutResult);
+
+    // Cleanup funktion. Om komponenten avmonteras eller `page` ändras, avbryt det pågående fetch-anropet
+    return () => {
+      clearTimeout(timeoutResult);
+      controller.abort(); // Avbryt anrop om användaren fortsätter skriva
+    };
   }, [searchQuery]);
 
   useEffect(() => {
+    if (!isDropdownOpen) return;
+
     const handleClickOutside = (event: MouseEvent) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
         setIsDropdownOpen(false); // Stäng dropdown
@@ -41,19 +61,15 @@ export default function SearchBar() {
 
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, []);
+  }, [isDropdownOpen]);
 
   const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
     if (event.key === "ArrowDown") {
       // Flytta markeringen ner
-      setHighlightedIndex((prevIndex) =>
-        prevIndex < searchResults.length - 1 ? prevIndex + 1 : 0
-      );
+      setHighlightedIndex((prevIndex) => (prevIndex < searchResults.length - 1 ? prevIndex + 1 : 0));
     } else if (event.key === "ArrowUp") {
       // Flytta markeringen upp
-      setHighlightedIndex((prevIndex) =>
-        prevIndex > 0 ? prevIndex - 1 : searchResults.length - 1
-      );
+      setHighlightedIndex((prevIndex) => (prevIndex > 0 ? prevIndex - 1 : searchResults.length - 1));
     } else if (event.key === "Enter" && highlightedIndex >= 0) {
       // Vid "Enter", navigera till det markerade elementet
       const selectedResult = searchResults[highlightedIndex];
@@ -72,7 +88,7 @@ export default function SearchBar() {
   };
 
   return (
-    <div className="relative w-full" ref={dropdownRef}>
+    <div className="relative w-full mt-3" ref={dropdownRef}>
       <input
         type="text"
         id="inputField"
@@ -89,17 +105,9 @@ export default function SearchBar() {
           {searchResults.map((result, index) => (
             <li
               key={result.id}
-              className={`p-2 cursor-pointer ${
-                highlightedIndex === index
-                  ? "bg-[#939393] text-white"
-                  : "hover:bg-[#939393] hover:text-white dark:text-white dark:hover:bg-[#4b4b4b]"
-              }`}
+              className={`p-2 cursor-pointer ${highlightedIndex === index ? "bg-[#939393] text-white" : "hover:bg-[#939393] hover:text-white dark:text-white dark:hover:bg-[#4b4b4b]"}`}
             >
-              <Link
-                href={`/search?query=${encodeURIComponent(result.name)}`}
-                onClick={handleLinkClick}
-                aria-label={`View results for ${result.name}`}
-              >
+              <Link href={`/search?query=${encodeURIComponent(result.name)}`} onClick={handleLinkClick} aria-label={`View results for ${result.name}`}>
                 {result.name}
               </Link>
             </li>
@@ -107,11 +115,7 @@ export default function SearchBar() {
         </ul>
       )}
 
-      {loading && (
-        <div className="absolute w-full bg-white bg-custom border border-gray-300 dark:border-gray-700 mt-1 rounded shadow-lg z-10 p-2 text-center text-custom">
-          Loading...
-        </div>
-      )}
+      {loading && <div className="absolute w-full bg-white bg-custom border border-gray-300 dark:border-gray-700 mt-1 rounded shadow-lg z-10 p-2 text-center text-custom">Loading...</div>}
     </div>
   );
 }

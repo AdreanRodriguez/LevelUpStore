@@ -42,6 +42,7 @@ export interface Platform {
 }
 
 export interface ProductListResponse {
+  count: number;
   results: Product[];
 }
 
