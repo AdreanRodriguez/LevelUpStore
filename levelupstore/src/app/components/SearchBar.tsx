@@ -98,7 +98,7 @@ export default function SearchBar() {
         aria-label="Search for games"
         placeholder="Search games..."
         onChange={(e) => setSearchQuery(e.target.value)}
-        className="w-full p-2 border bg-card rounded text-custom"
+        className="w-full p-2 border bg-card rounded text-custom drop-shadow-md"
       />
 
       {isDropdownOpen && searchResults.length > 0 && (
