@@ -1,47 +1,117 @@
 "use client";
+
 import { useTheme } from "next-themes";
+import { motion as m } from "motion/react";
 import { useEffect, useState } from "react";
 
 const ThemeSwitcher: React.FC = () => {
+  const { theme, setTheme } = useTheme();
   const [mount, setMount] = useState<boolean>(false);
-  const { systemTheme, theme, setTheme } = useTheme();
-  const currentTheme = theme === "system" ? systemTheme : theme;
 
   useEffect(() => {
     setMount(true);
   }, []);
 
-  if (!mount) {
-    // Returnera ingenting tills komponenten är monterad, för att teman ska fungera.
-    return null;
-  }
+  if (!mount) return null;
 
-  return mount ? (
+  // Sol- och måne-paths
+  const sunPath = "M70 49.5C70 60.8218 60.8218 70 49.5 70C38.1782 70 29 60.8218 29 49.5C29 38.1782 38.1782 29 49.5 29C60 29 69.5 38 70 49.5Z";
+  // const moonPath = "M70 49.5C70 60.8218 60.8218 70 49.5 70C38.1782 70 29 60.8218 29 49.5C29 38.1782 38.1782 29 49.5 29C39 45 49.5 59.5 70 49.5Z";
+  const moonPath = "M70 49.5C70 63 60.8218 75 49.5 75C38.1782 75 29 63 29 49.5C29 36 38.1782 25 49.5 25C36 47 49.5 65 70 49.5Z";
+
+  // Animerade solstrålar
+  const raysVariants = {
+    hidden: {
+      strokeOpacity: 0,
+      transition: { staggerChildren: 0.05, staggerDirection: -1 },
+    },
+    visible: {
+      strokeOpacity: 1,
+      transition: { staggerChildren: 0.05 },
+    },
+  };
+
+  const rayVariant = {
+    hidden: { pathLength: 0, opacity: 0, scale: 0 },
+    visible: {
+      pathLength: 1,
+      opacity: 1,
+      scale: 1,
+      transition: {
+        duration: 0.5,
+        ease: "easeOut",
+        pathLength: { duration: 0.3 },
+        opacity: { duration: 0.2 },
+        scale: { duration: 0.3 },
+      },
+    },
+  };
+
+  const shineVariant = {
+    hidden: {
+      opacity: 0,
+      scale: 2,
+      strokeDasharray: "20, 1000",
+      strokeDashoffset: 0,
+      filter: "blur(0px)",
+    },
+    visible: {
+      opacity: [0, 1, 0],
+      strokeDashoffset: [0, -50, -100],
+      filter: ["blur(2px)", "blur(2px)", "blur(0px)"],
+      transition: {
+        duration: 0.75,
+        ease: "linear",
+      },
+    },
+  };
+
+  return (
     <div className="absolute left-2 top-10 z-[11]">
       <button
-        onClick={() => setTheme(currentTheme === "dark" ? "light" : "dark")}
+        onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
         type="button"
-        className={`flex h-10 w-10 p-2 items-center justify-center rounded-md border ${
-          currentTheme === "dark" ? "border-white text-white" : "border-gray-800 text-gray-800"
-        } focus:outline-none focus:ring-0 focus:ring-gray-200`}
-        aria-label={currentTheme === "dark" ? "Switch to light mode" : "Switch to dark mode"}
+        className={`overflow-hidden p-0.5 h-8 w-8 sm:h-10 sm:w-10 flex items-center justify-center rounded-md border border-slate-500
+          ${theme === "dark" ? "border-white text-white" : "border-gray-800 text-gray-800"} 
+          focus:outline-none focus:ring-0 focus:ring-gray-200`}
+        aria-label={theme === "dark" ? "Switch to light mode" : "Switch to dark mode"}
       >
-        {currentTheme === "dark" ? (
-          <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-            <path
-              d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z"
-              fillRule="evenodd"
-              clipRule="evenodd"
-            ></path>
-          </svg>
-        ) : (
-          <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-            <path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path>
-          </svg>
-        )}
+        <m.svg strokeWidth="4" strokeLinecap="round" width={100} height={100} viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" className="relative">
+          {/* Shine Effekt på Månen i Dark Mode */}
+          <m.path variants={shineVariant} initial="hidden" animate={theme === "dark" ? "visible" : "hidden"} className="absolute top-0 left-0 stroke-blue-100" />
+
+          {/* Månen i Dark Mode / Solen i Light Mode */}
+          <m.path
+            className={theme === "dark" ? "fill-blue-400 stroke-blue-400" : "fill-yellow-600 stroke-yellow-600"}
+            animate={{
+              d: theme === "dark" ? moonPath : sunPath,
+              scale: theme === "dark" ? 1.4 : 1, // Justera skalan
+              x: theme === "dark" ? -20 : 0, // Flytta månen / solen
+              y: theme === "dark" ? -20 : 0, // Flytta månen / solen
+            }}
+            transition={{
+              duration: 0.5,
+              ease: "easeOut",
+            }}
+            fillOpacity={0.35}
+            strokeOpacity={1}
+          />
+
+          {/* Solstrålar i Light Mode */}
+          <m.g variants={raysVariants} initial="hidden" animate={theme === "light" ? "visible" : "hidden"} className="stroke-6 stroke-yellow-600">
+            <m.path variants={rayVariant} d="M50 2V11" />
+            <m.path variants={rayVariant} d="M85 15L78 22" />
+            <m.path variants={rayVariant} d="M98 50H89" />
+            <m.path variants={rayVariant} d="M85 85L78 78" />
+            <m.path variants={rayVariant} d="M50 98V89" />
+            <m.path variants={rayVariant} d="M23 78L16 84" />
+            <m.path variants={rayVariant} d="M11 50H2" />
+            <m.path variants={rayVariant} d="M23 23L16 16" />
+          </m.g>
+        </m.svg>
       </button>
     </div>
-  ) : null;
+  );
 };
 
 export default ThemeSwitcher;

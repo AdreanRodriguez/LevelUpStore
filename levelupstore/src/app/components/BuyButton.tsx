@@ -21,7 +21,7 @@ export default function BuyButton({ item }: BuyButtonProps) {
   return (
     <button
       onClick={handleBuyButton}
-      className={`text-white font-bold py-2 px-4 rounded transition flex items-center justify-center
+      className={`text-white font-righteous py-2 px-4 rounded transition flex items-center justify-center
         ${clickedButton === item.id ? "bg-green-500 scale-105" : "bg-orange-500 hover:bg-orange-600"}`}
     >
       {clickedButton === item.id ? (
