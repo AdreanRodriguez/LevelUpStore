@@ -4,9 +4,9 @@ import { errorResponse, successResponse } from "@/app/utils/response";
 const API_KEY = process.env.NEXT_PUBLIC_RAWG_API_KEY;
 const API_URL_GAMES = "https://api.rawg.io/api/games";
 
-export async function GET(req: Request, { params }: { params: { id: string } }) {
+export async function GET(req: Request, { params }: { params: Promise<{ id: string }> }) {
   try {
-    const { id } = params;
+    const { id } = await params;
 
     if (!id) {
       return errorResponse("Game ID is missing", 400);
