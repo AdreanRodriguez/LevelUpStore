@@ -1,22 +1,18 @@
 "use client";
 
+import Loading from "@/app/loading";
+import { Genres } from "@/app/types/genres";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
-import GenreDetailsClient from "@/app/components/GenreDetailsClient";
 import { fetchGenreById, fetchGames } from "@/app/lib/fetcher";
 import { Product, ProductApiResponse } from "@/app/types/product";
-import { Genres } from "@/app/types/genres";
-import Loading from "@/app/loading";
+import GenreDetailsClient from "@/app/components/GenreDetailsClient";
 
 export default function GenreDetailPage() {
   const params = useParams();
   const genreId = Array.isArray(params.id) ? params.id[0] : params.id;
 
-  // Om genreId är undefined, stoppa renderingen direkt
-  if (!genreId) {
-    return <p className="text-red-500">Genre ID saknas</p>;
-  }
-
+  // ✅ Flytta hooks högst upp
   const [loading, setLoading] = useState(true);
   const [games, setGames] = useState<Product[]>([]);
   const [genre, setGenre] = useState<Genres | null>(null);
@@ -24,13 +20,12 @@ export default function GenreDetailPage() {
   useEffect(() => {
     async function fetchData() {
       try {
-        if (!genreId) return; // Säkerställ att genreId alltid är en string
+        if (!genreId) return; // ✅ Säkerställ att genreId är en string
 
-        const fetchedGenre = await fetchGenreById(genreId); // Nu vet vi att genreId är en string
+        const fetchedGenre = await fetchGenreById(genreId);
         setGenre(fetchedGenre);
 
         const gamesResponse: ProductApiResponse<Product> = await fetchGames();
-
         const filteredGames = gamesResponse.results.filter((game) => game.genres?.some((g) => g.id === Number(fetchedGenre.id)));
 
         setGames(filteredGames);
@@ -44,12 +39,17 @@ export default function GenreDetailPage() {
     fetchData();
   }, [genreId]);
 
+  // ✅ Hantera edge-cases efter hooks
+  if (!genreId) {
+    return <p className="text-red-500">Genre ID saknas</p>;
+  }
+
   if (loading) {
     return <Loading />;
   }
 
   if (!genre) {
-    return <p className="text-red-500">Genre not found</p>;
+    return <p className="text-red-500 text-xl font-bold text-center mt-3">Genre not found</p>;
   }
 
   return <GenreDetailsClient games={games} genreName={genre.name} genreImage={genre.image_background} />;

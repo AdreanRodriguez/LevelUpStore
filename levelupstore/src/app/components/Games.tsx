@@ -2,15 +2,15 @@
 
 import Link from "next/link";
 import Image from "next/image";
+import Loading from "../loading";
+import BuyButton from "./BuyButton";
 import FilterToggle from "./FilterToggle";
 import GenresPage from "@/app/genres/page";
-import { useState, useEffect } from "react";
 import { Product } from "@/app/types/product";
 import { fetchGames } from "@/app/lib/fetcher";
 import getPriceByYear from "../utils/getPriceByYear";
+import { useState, useEffect, useCallback } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
-import BuyButton from "./BuyButton";
-import Loading from "../loading";
 
 export default function Games() {
   const router = useRouter();
@@ -19,58 +19,56 @@ export default function Games() {
   const [loading, setLoading] = useState(true);
   const [totalPages, setTotalPages] = useState(1);
   const [games, setGames] = useState<Product[]>([]);
-  const [maxVisiblePages, setMaxVisiblePages] = useState(10); // Dynamisk synliga sidor
 
   const page = Number(searchParams.get("page")) || 1;
-
   const MAX_PAGES = 12;
+  const fallbackImage = "/fallbackImage.svg";
 
-  useEffect(() => {
-    // Skapar en Abortcontroller för att undvika race conditions eller onödiga nätverksanrop.
-    const controller = new AbortController();
-    const signal = controller.signal; // Hämtar signalen som används för att avbryta fetch-anrop
+  // useCallback för att säkerställa att funktionen inte återskapas i onödan
+  const getGames = useCallback(
+    async (signal: AbortSignal) => {
+      if (signal.aborted) return; // Kolla om signalen redan är avbruten
 
-    async function getGames() {
-      setLoading(true);
       try {
         const data = await fetchGames(page, signal);
+        if (signal.aborted) return; // Kolla igen innan state uppdateras
         setGames(data.results);
-        const calculatedPages = data.count ? Math.ceil(data.count / 10) : 1;
-        setTotalPages(Math.min(calculatedPages, MAX_PAGES));
+        setTotalPages(Math.min(Math.ceil(data.count / 10), MAX_PAGES));
       } catch (error) {
-        // Om anropet avbröts med `AbortController`, logga det som debug istället för error
-        if (error instanceof Error) {
-          if (error.name !== "AbortError") {
-            console.error("Error fetching games:", error.message);
-          }
-        } else {
-          console.error("Unknown error fetching games", error); // Hanterar andra fel normalt
+        if (error instanceof Error && error.name !== "AbortError") {
+          console.error("Error fetching games:", error.message);
         }
-      } finally {
-        setLoading(false);
       }
-    }
+    },
+    [page]
+  );
 
-    getGames();
+  useEffect(() => {
+    const controller = new AbortController();
+    const signal = controller.signal;
 
-    // Cleanup funktion. Om komponenten avmonteras eller `page` ändras, avbryt det pågående fetch-anropet
-    return () => controller.abort(); // Avbryt om sidan byts
-  }, [page]);
+    setLoading(true); // Aktiveras när ny data hämtas
 
-  const startPage = Math.max(1, page - Math.floor(maxVisiblePages / 2));
-  const endPage = Math.min(totalPages, startPage + maxVisiblePages - 1);
+    getGames(signal).finally(() => setLoading(false));
 
-  const pages = [];
-  for (let i = startPage; i <= endPage; i++) {
-    pages.push(i);
-  }
+    return () => controller.abort();
+  }, [getGames]);
 
-  const handlePageChange = (newPage: number) => {
-    if (newPage !== page) {
-      router.push(`/games?page=${newPage}`);
-      window.scrollTo(0, 0);
-    }
-  };
+  // useCallback för sidhantering
+  const handlePageChange = useCallback(
+    (newPage: number) => {
+      if (newPage !== page) {
+        router.push(`/games?page=${newPage}`);
+      }
+    },
+    [router, page]
+  );
+
+  // Pagination logic
+  const MAX_VISIBLE_PAGES = 10;
+  const startPage = Math.max(1, page - Math.floor(MAX_VISIBLE_PAGES / 2));
+  const endPage = Math.min(totalPages, startPage + MAX_VISIBLE_PAGES - 1);
+  const pages = Array.from({ length: endPage - startPage + 1 }, (_, i) => startPage + i);
 
   return (
     <section className="p-5 px-2 min-h-screen bg-custom font-righteous flex flex-col">
@@ -82,15 +80,15 @@ export default function Games() {
         <Loading />
       ) : (
         <div className="grid grid-cols-autoFit gap-4 flex-1">
-          {games.map((product) => {
+          {games.map((product, index) => {
             const releaseYear = product.released && product.released !== "N/A" ? new Date(product.released).getFullYear() : "N/A";
             const price = releaseYear !== "N/A" && typeof releaseYear === "number" ? `$${getPriceByYear(releaseYear).toFixed(2)}` : "N/A";
 
             return (
               <div key={product.id} className="p-4 border rounded shadow hover:shadow-lg bg-card text-custom flex flex-col justify-between">
-                <Link href={`/games/${product.id}`} className="block">
+                <Link href={`/games/${product.id}`} title={`View details for ${product.name}`} className="block">
                   <figure className="aspect-video">
-                    <Image src={product.background_image} alt={product.name} width={400} height={225} priority={false} className="rounded mb-3 w-full h-full" />
+                    <Image src={product.background_image || fallbackImage} alt={product.name} width={400} height={225} priority={index === 0} className="rounded mb-3 w-full h-full" />
                   </figure>
                   <h2 className="text-xl font-bold">{product.name}</h2>
                 </Link>

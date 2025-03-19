@@ -1,52 +1,58 @@
 "use client";
 
-import { Product } from "@/app/types/product";
-import React, { useState, useEffect, useRef } from "react";
-import { fetchSearchedGames } from "@/app/lib/fetcher";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { Product } from "@/app/types/product";
+import { fetchSearchedGames } from "@/app/lib/fetcher";
+import React, { useState, useEffect, useRef } from "react";
 
 export default function SearchBar() {
   const [loading, setLoading] = useState<boolean>(false);
   const [searchQuery, setSearchQuery] = useState<string>("");
   const [searchResults, setSearchResults] = useState<Product[]>([]);
   const [isDropdownOpen, setIsDropdownOpen] = useState<boolean>(false);
-  const [highlightedIndex, setHighlightedIndex] = useState<number>(0); // För att hålla koll på markerat element
+  const [highlightedIndex, setHighlightedIndex] = useState<number>(0);
 
+  const router = useRouter();
   const dropdownRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
-    // Skapar en ny AbortController för att kunna avbryta nätverksanrop
+    if (!searchQuery.trim()) {
+      setSearchResults([]); // Om användaren tömmer input, töm dropdown
+      setIsDropdownOpen(false);
+      return;
+    }
+
+    // Skapa en AbortController för att avbryta gamla requests
     const controller = new AbortController();
-    const signal = controller.signal; // Hämtar signalen som används för att avbryta fetch-anrop
+    const signal = controller.signal;
 
     const fetchResults = async () => {
-      if (searchQuery.trim() === "") {
-        setSearchResults([]);
-        return;
-      }
-
       setLoading(true);
-
       try {
         const { results } = await fetchSearchedGames(searchQuery, signal);
-        setSearchResults(results.slice(0, 10)); // Visa max 10 resultat
-        setIsDropdownOpen(true);
+        if (results.length > 0) {
+          setSearchResults(results.slice(0, 10)); // Begränsa antal sökresultat
+          setIsDropdownOpen(true);
+        } else {
+          setSearchResults([]);
+          setIsDropdownOpen(false);
+        }
       } catch (error) {
         if (error instanceof Error && error.name !== "AbortError") {
           console.error("Error fetching search results:", error);
-          setSearchResults([]);
         }
+        setSearchResults([]);
       } finally {
         setLoading(false);
       }
     };
 
-    const timeoutResult = setTimeout(fetchResults, 300); // Debounce
+    const timeoutResult = setTimeout(fetchResults, 300);
 
-    // Cleanup funktion. Om komponenten avmonteras eller `page` ändras, avbryt det pågående fetch-anropet
     return () => {
       clearTimeout(timeoutResult);
-      controller.abort(); // Avbryt anrop om användaren fortsätter skriva
+      controller.abort();
     };
   }, [searchQuery]);
 
@@ -55,7 +61,7 @@ export default function SearchBar() {
 
     const handleClickOutside = (event: MouseEvent) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
-        setIsDropdownOpen(false); // Stäng dropdown
+        setIsDropdownOpen(false);
       }
     };
 
@@ -65,16 +71,13 @@ export default function SearchBar() {
 
   const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
     if (event.key === "ArrowDown") {
-      // Flytta markeringen ner
       setHighlightedIndex((prevIndex) => (prevIndex < searchResults.length - 1 ? prevIndex + 1 : 0));
     } else if (event.key === "ArrowUp") {
-      // Flytta markeringen upp
       setHighlightedIndex((prevIndex) => (prevIndex > 0 ? prevIndex - 1 : searchResults.length - 1));
     } else if (event.key === "Enter" && highlightedIndex >= 0) {
-      // Vid "Enter", navigera till det markerade elementet
       const selectedResult = searchResults[highlightedIndex];
       if (selectedResult) {
-        window.location.href = `/search?query=${encodeURIComponent(selectedResult.name)}`;
+        router.push(`/search?query=${encodeURIComponent(selectedResult.name)}`);
         setIsDropdownOpen(false);
         setSearchQuery("");
       }
@@ -82,7 +85,7 @@ export default function SearchBar() {
   };
 
   const handleLinkClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
-    e.stopPropagation(); // Stoppar klick från att bubbla upp och stänga dropdownen först
+    e.stopPropagation();
     setIsDropdownOpen(false);
     setSearchQuery("");
   };

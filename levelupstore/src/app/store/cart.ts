@@ -1,6 +1,6 @@
 import { atom } from "jotai";
-import { Product } from "../types/product";
 import { Genres } from "../types/genres";
+import { Product } from "../types/product";
 
 // Funktion för att beräkna pris baserat på released-året
 function getPriceByYear(year: number): number {
@@ -36,7 +36,7 @@ export const cartCountAtom = atom((get) => get(cartAtom).reduce((total, item) =>
 export const cartTotalPriceAtom = atom((get) => get(cartAtom).reduce((total, item) => ("price" in item ? total + item.price * item.quantity : total), 0));
 
 // Tömmer hela kundvagnen
-export const clearCartAtom = atom(null, (get, set) => {
+export const clearCartAtom = atom(null, (_, set) => {
   set(cartAtom, []); // Sätter cart till en tom array
 });
 
