@@ -25,13 +25,19 @@ export async function GET(request: Request) {
     const response = await fetch(url);
 
     if (!response.ok) {
-      return errorResponse(`Failed to fetch search results.`, 500);
+      return errorResponse(`Failed to fetch search results.`, response.status);
     }
 
     const data = await response.json();
     return successResponse(data, 200);
-  } catch (error: any) {
-    console.error("Error in search route:", error.message || error);
-    return errorResponse(error.message || "An unexpected error occurred.", 500);
+  } catch (error: unknown) {
+    let errorMessage = "An error occurred while searching for games.";
+
+    if (error instanceof Error) {
+      errorMessage = `Search request failed: ${error.message}`;
+    }
+
+    console.error("Error in search route:", errorMessage);
+    return errorResponse(errorMessage, 500);
   }
 }

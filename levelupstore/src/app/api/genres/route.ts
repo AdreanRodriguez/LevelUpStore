@@ -13,13 +13,19 @@ export async function GET() {
     const response = await fetch(`${API_URL_GENRES}?key=${API_KEY}&page_size=10&ordering=-added`);
 
     if (!response.ok) {
-      return errorResponse("Failed to fetch genres: ", 400);
+      return errorResponse(`Failed to fetch genres: ${response.statusText}`, response.status);
     }
 
     const data: GenresListResponse = await response.json();
     return successResponse(data, 200);
-  } catch (error: any) {
-    console.error("Error fetching genres:", error.message || error);
-    return errorResponse(error.message || "Failed to fetch genres", 500);
+  } catch (error: unknown) {
+    let errorMessage = "An error occurred while fetching genres.";
+
+    if (error instanceof Error) {
+      errorMessage = `Genres request failed: ${error.message}`;
+    }
+
+    console.error("Error fetching genres:", errorMessage);
+    return errorResponse(errorMessage, 500);
   }
 }

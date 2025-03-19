@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
+import Loading from "../loading";
 import { useEffect, useState } from "react";
 import { Product } from "@/app/types/product";
 import { useSearchParams } from "next/navigation";
@@ -10,9 +11,10 @@ import { fetchSearchedGames } from "@/app/lib/fetcher";
 
 export default function Search() {
   const searchParams = useSearchParams();
-  const query = searchParams.get("query") || "";
+  const query = searchParams.get("query")?.trim() || "";
   const [loading, setLoading] = useState<boolean>(false);
   const [results, setResults] = useState<Product[]>([]);
+  const [errorMessage, setErrorMessage] = useState<string>(""); // Lagrar eventuella fel
 
   useEffect(() => {
     // Skapar en ny AbortController för att kunna avbryta nätverksanrop
@@ -20,21 +22,34 @@ export default function Search() {
     const signal = controller.signal;
 
     const fetchResults = async () => {
-      if (!query) {
-        console.error("No query - no searchresult.");
+      if (!query.trim()) {
+        setResults([]); // Sätt en tom lista om ingen sökfråga anges
+        setErrorMessage("Please enter a search term.");
         return;
       }
 
       setLoading(true);
+      setErrorMessage(""); // Återställ felmeddelande innan ny sökning
 
       try {
         const { results } = await fetchSearchedGames(query, signal);
-        setResults(results || []); // Sätt resultatet, även om det är en tom array
+
+        console.log("API Response:", results); // Debugga API-responsen
+
+        // Om API:t returnerar en tom array, visa ett felmeddelande
+        if (!results || results.length === 0) {
+          setResults([]);
+          setErrorMessage(`No results found for "${query}".`);
+        } else {
+          setResults(results); // Sätt resultatet, även om det är en tom array
+          setErrorMessage(""); // Rensa eventuellt felmeddelande
+        }
       } catch (error) {
         if (error instanceof Error && error.name !== "AbortError") {
           console.error("Error fetching search results:", error);
-          setResults([]); // Hantera fel genom att sätta tom lista
+          setErrorMessage("An error occurred while fetching search results.");
         }
+        setResults([]); // Sätt tom lista vid fel
       } finally {
         setLoading(false); // Avsluta loading oavsett om det är framgång eller fel
       }
@@ -42,7 +57,7 @@ export default function Search() {
 
     fetchResults();
 
-    // Cleanup funktion. Om komponenten avmonteras eller `page` ändras, avbryt det pågående fetch-anropet
+    // Cleanup funktion. Om komponenten avmonteras eller query ändras, avbryt det pågående fetch-anropet
     return () => controller.abort(); // Avbryt anrop om komponenten avmonteras eller query ändras
   }, [query]);
 
@@ -51,17 +66,20 @@ export default function Search() {
   return (
     <div className="p-5">
       <h1 className="text-2xl text-custom font-bold mb-4">
-        Search Results for "<span className="text-orange-500 dark:text-[#fb923c]">{query}</span>"
+        Search results for <span className="text-orange-500 dark:text-[#fb923c]">{query}</span>
       </h1>
 
       {loading ? (
-        <p className="text-center text-custom">Loading...</p>
-      ) : results && results.length > 0 ? (
+        <Loading />
+      ) : errorMessage ? (
+        <p className="text-red-500 text-lg">{errorMessage}</p> // Visar felmeddelande om inget hittas
+      ) : results.length > 0 ? (
         <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {results.map((result) => {
             const releaseYear = result.released && result.released !== "N/A" ? new Date(result.released).getFullYear() : "N/A";
 
             const price = releaseYear !== "N/A" && typeof releaseYear === "number" ? `$${getPriceByYear(releaseYear).toFixed(2)}` : "N/A";
+
             return (
               <li key={result.id} className="block p-4 border rounded shadow hover:shadow-lg bg-card text-custom">
                 <Link href={`/search/${result.id}`}>
@@ -75,7 +93,6 @@ export default function Search() {
                       onError={(e) => {
                         (e.target as HTMLImageElement).src = fallbackImage;
                       }}
-                      // unoptimized // Använd om du inte vill att Next.js ska optimera bilder
                     />
                   </figure>
                   <h2 className="text-xl font-semibold">{result.name}</h2>
@@ -87,9 +104,7 @@ export default function Search() {
             );
           })}
         </ul>
-      ) : (
-        <p>No results found for "{query}".</p>
-      )}
+      ) : null}
     </div>
   );
 }
