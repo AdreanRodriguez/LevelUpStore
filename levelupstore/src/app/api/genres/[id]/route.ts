@@ -4,9 +4,9 @@ import { errorResponse, successResponse } from "@/app/utils/response";
 const API_KEY = process.env.NEXT_PUBLIC_RAWG_API_KEY;
 const API_URL_GENRES = "https://api.rawg.io/api/genres";
 
-export async function GET(req: Request, { params }: { params: { id: string } }) {
+export async function GET(req: Request, { params }: { params: Promise<{ id: string }> }) {
   try {
-    const { id } = params; // Hämta `id` direkt från params
+    const { id } = await params; // Hämta `id` direkt från params
 
     if (!id) {
       return errorResponse("Genre ID is missing in the route parameters.", 400);
