@@ -35,6 +35,11 @@ export const cartCountAtom = atom((get) => get(cartAtom).reduce((total, item) =>
 // Beräkna totalpris för kundvagnen
 export const cartTotalPriceAtom = atom((get) => get(cartAtom).reduce((total, item) => ("price" in item ? total + item.price * item.quantity : total), 0));
 
+// Tömmer hela kundvagnen
+export const clearCartAtom = atom(null, (get, set) => {
+  set(cartAtom, []); // Sätter cart till en tom array
+});
+
 // Lägga till en produkt eller genre i kundvagnen
 export const addToCartAtom = atom(null, (get, set, item: Product | Genres) => {
   const cart = get(cartAtom);

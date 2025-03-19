@@ -18,7 +18,8 @@ export default function Header() {
         <Link href={"/"}>LevelUp Store</Link>
       </h1>
       <Link href="/cart" className="absolute right-5 top-12">
-        <RiShoppingCartLine className=" w-10 h-10 text-custom" /> {cartCount > 0 ? <span className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full px-2 text-xs">{cartCount}</span> : ""}
+        <RiShoppingCartLine className=" w-10 h-10 text-custom" aria-label="Go to Cart" />{" "}
+        {cartCount > 0 ? <span className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full px-2 text-xs">{cartCount}</span> : ""}
       </Link>
       <div className="max-w-mainSize w-full">
         <SearchBar />

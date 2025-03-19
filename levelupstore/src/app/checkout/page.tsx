@@ -1,11 +1,13 @@
 "use client";
 
-import Link from "next/link";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 export default function CheckoutPage() {
   const [zipCode, setZipCode] = useState("");
   const [isValid, setIsValid] = useState(false);
+
+  const router = useRouter();
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
@@ -18,28 +20,36 @@ export default function CheckoutPage() {
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter" && isValid) {
-      window.location.href = "/checkout/user"; // Navigera direkt
+      handleSaveZipCode();
+    }
+  };
+
+  const handleSaveZipCode = () => {
+    if (isValid) {
+      localStorage.setItem("zipCode", zipCode);
+      router.push("/checkout/user"); // Navigera till nästa sida utan sidladdning
     }
   };
 
   return (
     <div className="ml-3">
-      <p className="text-lg font-semibold text-gray-700">Enter your 5-digit ZIP code:</p>
+      <p className="text-lg font-semibold text-gray-700">Enter your 5-digitpostcode / ZIP:</p>
       <input
         type="text"
         value={zipCode}
+        placeholder="12345"
         onKeyDown={handleKeyDown}
         aria-label="Enter zip code"
-        placeholder="12345"
         onChange={handleInputChange}
-        className="p-3 mt-2 mr-3 drop-shadow-md border-2 border-gray-300 rounded"
+        className="p-3 mt-2 mr-3 drop-shadow-md border-gray-300 rounded border bg-card text-custom"
       />
-      <Link
-        href={isValid ? "/checkout/user" : "#"}
+      <button
+        disabled={!isValid}
+        onClick={handleSaveZipCode}
         className={`inline-block bg-blue-500 text-white font-bold py-3 px-6 rounded drop-shadow-md transition ${isValid ? "hover:bg-blue-600" : "opacity-50 cursor-not-allowed"}`}
       >
         Next
-      </Link>
+      </button>
     </div>
   );
 }
