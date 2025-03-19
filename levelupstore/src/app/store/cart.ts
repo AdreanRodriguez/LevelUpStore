@@ -13,7 +13,7 @@ function getPriceByYear(year: number): number {
 // Skapa separata CartItem-typer för produkter och genrer
 export interface CartItemProduct extends Product {
   quantity: number;
-  price: number; // 🔥 Lägg till price
+  price: number;
 }
 
 export interface CartItemGenre extends Genres {
