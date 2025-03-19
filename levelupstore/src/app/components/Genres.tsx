@@ -37,10 +37,10 @@ export default function Genres() {
   }, []);
 
   if (loading) return <p className="text-custom">Loading genre...</p>;
-  if (error) return <p className="text-red-500">{error}</p>;
+  if (error) return <p className="text-red-500 font-afacad">{error}</p>;
 
   return (
-    <div className="text-3xl font-bold mb-4 text-custom pl-2">
+    <div className="text-3xl mb-4 text-custom pl-2">
       <ul className="text-custom font-righteous grid grid-cols-[repeat(auto-fill,minmax(160px,1fr))] text-center">
         {genres.map((genre) => (
           <li key={genre.id} className="text-custom">

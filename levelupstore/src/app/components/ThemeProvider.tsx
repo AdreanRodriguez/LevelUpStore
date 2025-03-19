@@ -1,16 +1,9 @@
 "use client";
 
 import { ReactNode, useEffect, useState } from "react";
-import { ThemeProvider as NextThemesProvider, ThemeProviderProps } from "next-themes";
+import { ThemeProvider as NextThemesProvider } from "next-themes";
 
-interface CustomThemeProviderProps extends Omit<ThemeProviderProps, "attribute"> {
-  children: ReactNode;
-  attribute: "class"; // Specifik typ för attribute
-  defaultTheme: string;
-  enableSystem: boolean;
-}
-
-export default function ThemeProvider({ children, ...props }: CustomThemeProviderProps) {
+export default function ThemeProvider({ children }: { children: ReactNode }) {
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
@@ -18,8 +11,12 @@ export default function ThemeProvider({ children, ...props }: CustomThemeProvide
   }, []);
 
   if (!mounted) {
-    return <>{children}</>; // Returnera endast children tills komponenten är monterad
+    return <>{children}</>; // Undvik hydration errors
   }
 
-  return <NextThemesProvider {...props}>{children}</NextThemesProvider>;
+  return (
+    <NextThemesProvider attribute="class" defaultTheme="system" enableSystem>
+      {children}
+    </NextThemesProvider>
+  );
 }

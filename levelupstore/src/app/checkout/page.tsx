@@ -33,7 +33,7 @@ export default function CheckoutPage() {
 
   return (
     <div className="ml-3">
-      <p className="text-lg font-semibold text-gray-700">Enter your 5-digitpostcode / ZIP:</p>
+      <p className="text-lg font-righteous mt-5 text-custom text-gray-700">Enter your 5-digitpostcode / ZIP:</p>
       <input
         type="text"
         value={zipCode}
@@ -46,7 +46,7 @@ export default function CheckoutPage() {
       <button
         disabled={!isValid}
         onClick={handleSaveZipCode}
-        className={`inline-block bg-blue-500 text-white font-bold py-3 px-6 rounded drop-shadow-md transition ${isValid ? "hover:bg-blue-600" : "opacity-50 cursor-not-allowed"}`}
+        className={`inline-block bg-blue-500 text-white font-audiowide py-3 px-6 rounded drop-shadow-md transition ${isValid ? "hover:bg-blue-600" : "opacity-50 cursor-not-allowed"}`}
       >
         Next
       </button>
