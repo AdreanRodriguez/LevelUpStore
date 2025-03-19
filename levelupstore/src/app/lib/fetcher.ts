@@ -1,6 +1,7 @@
 import { Genres, GenresListResponse } from "@/app/types/genres";
 import { ProductApiResponse, Product, ProductListResponse } from "@/app/types/product";
 
+//*& GLÖM INTE
 const API_URL = process.env.NEXT_PUBLIC_BASE_URL;
 const localhost = "http://localhost:3000";
 

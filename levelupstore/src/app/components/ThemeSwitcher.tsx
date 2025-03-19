@@ -5,8 +5,8 @@ import { motion as m } from "motion/react";
 import { useEffect, useState } from "react";
 
 const ThemeSwitcher: React.FC = () => {
-  const [mount, setMount] = useState<boolean>(false);
   const { theme, setTheme } = useTheme();
+  const [mount, setMount] = useState<boolean>(false);
 
   useEffect(() => {
     setMount(true);
@@ -14,12 +14,12 @@ const ThemeSwitcher: React.FC = () => {
 
   if (!mount) return null;
 
-  // 🔥 Sol- och måne-paths
+  // Sol- och måne-paths
   const sunPath = "M70 49.5C70 60.8218 60.8218 70 49.5 70C38.1782 70 29 60.8218 29 49.5C29 38.1782 38.1782 29 49.5 29C60 29 69.5 38 70 49.5Z";
   // const moonPath = "M70 49.5C70 60.8218 60.8218 70 49.5 70C38.1782 70 29 60.8218 29 49.5C29 38.1782 38.1782 29 49.5 29C39 45 49.5 59.5 70 49.5Z";
   const moonPath = "M70 49.5C70 63 60.8218 75 49.5 75C38.1782 75 29 63 29 49.5C29 36 38.1782 25 49.5 25C36 47 49.5 65 70 49.5Z";
 
-  // 🔆 Animerade solstrålar
+  // Animerade solstrålar
   const raysVariants = {
     hidden: {
       strokeOpacity: 0,
@@ -47,26 +47,47 @@ const ThemeSwitcher: React.FC = () => {
     },
   };
 
+  const shineVariant = {
+    hidden: {
+      opacity: 0,
+      scale: 2,
+      strokeDasharray: "20, 1000",
+      strokeDashoffset: 0,
+      filter: "blur(0px)",
+    },
+    visible: {
+      opacity: [0, 1, 0],
+      strokeDashoffset: [0, -50, -100],
+      filter: ["blur(2px)", "blur(2px)", "blur(0px)"],
+      transition: {
+        duration: 0.75,
+        ease: "linear",
+      },
+    },
+  };
+
   return (
     <div className="absolute left-2 top-10 z-[11]">
       <button
         onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
         type="button"
-        className={`overflow-hidden h-10 w-10 flex items-center justify-center rounded-md border 
+        className={`overflow-hidden p-0.5 h-8 w-8 sm:h-10 sm:w-10 flex items-center justify-center rounded-md border border-slate-500
           ${theme === "dark" ? "border-white text-white" : "border-gray-800 text-gray-800"} 
           focus:outline-none focus:ring-0 focus:ring-gray-200`}
         aria-label={theme === "dark" ? "Switch to light mode" : "Switch to dark mode"}
       >
         <m.svg strokeWidth="4" strokeLinecap="round" width={100} height={100} viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" className="relative">
-          {/* Månen i Dark Mode */}
+          {/* Shine Effekt på Månen i Dark Mode */}
+          <m.path variants={shineVariant} initial="hidden" animate={theme === "dark" ? "visible" : "hidden"} className="absolute top-0 left-0 stroke-blue-100" />
+
+          {/* Månen i Dark Mode / Solen i Light Mode */}
           <m.path
             className={theme === "dark" ? "fill-blue-400 stroke-blue-400" : "fill-yellow-600 stroke-yellow-600"}
             animate={{
               d: theme === "dark" ? moonPath : sunPath,
-              rotate: theme === "dark" ? -360 : 0,
-              scale: theme === "dark" ? 1.2 : 1, // Justera skalan
-              x: theme === "dark" ? -10 : 0, // Flytta månen / solen
-              y: theme === "dark" ? -10 : 0, // Flytta månen / solen
+              scale: theme === "dark" ? 1.4 : 1, // Justera skalan
+              x: theme === "dark" ? -20 : 0, // Flytta månen / solen
+              y: theme === "dark" ? -20 : 0, // Flytta månen / solen
             }}
             transition={{
               duration: 0.5,

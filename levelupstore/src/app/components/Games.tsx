@@ -90,11 +90,15 @@ export default function Games() {
                   <figure className="aspect-video">
                     <Image src={product.background_image || fallbackImage} alt={product.name} width={400} height={225} priority={index === 0} className="rounded mb-3 w-full h-full" />
                   </figure>
-                  <h2 className="text-xl font-bold">{product.name}</h2>
+                  <h2 className="text-xl">{product.name}</h2>
                 </Link>
 
                 <p className="text-xl text-custom pt-2 pb-2">Rating: ⭐({product.rating})</p>
-                <p className={`pt-8 pr-5 pl-5 pb-4 flex justify-end font-bold text-2xl ${typeof releaseYear === "number" && releaseYear < 2010 ? "text-red-500" : "text-black dark:text-[#e2e2e2]"}`}>
+                <p
+                  className={`pt-8 pr-5 pl-5 font-afacad font-bold pb-4 flex justify-end text-2xl ${
+                    typeof releaseYear === "number" && releaseYear < 2010 ? "text-red-500" : "text-black dark:text-[#e2e2e2]"
+                  }`}
+                >
                   {price}
                 </p>
 

@@ -28,6 +28,11 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <link
+        href="https://fonts.googleapis.com/css2?family=Afacad:ital,wght@0,400;1,400..700&family=Audiowide&family=PT+Sans:ital,wght@0,400;0,700;1,400;1,700&family=Righteous&family=Stalinist+One&display=swap"
+        rel="stylesheet"
+      />
+
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased bg-custom`}>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           <ErrorBoundary>
