@@ -14,7 +14,7 @@ export default {
         righteous: ['"Righteous"', "cursive"],
       },
       gridTemplateColumns: {
-        autoFit: "repeat(auto-fit, minmax(300px, 1fr))",
+        autoFit: "repeat(auto-fit, minmax(250px, 1fr))",
       },
       colors: {
         textColor: "var(--textColor)",

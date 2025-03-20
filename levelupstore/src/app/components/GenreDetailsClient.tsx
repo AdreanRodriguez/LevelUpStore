@@ -18,8 +18,8 @@ export default function GenreDetailsClient({ games = [], genreName, genreImage }
   if (!games || games.length === 0) {
     return (
       <div className="text-center p-5">
-        <h1 className="text-3xl font-bold text-red-500">No games found for {genreName}</h1>
-        <p className="text-lg text-gray-500">Try searching for another genre.</p>
+        <h1 className="text-xl sm:text-3xl font-bold text-red-500 font-afacad">No games found for {genreName}</h1>
+        <p className="sm:text-xl text-gray-500 font-afacad">Try searching for another genre.</p>
       </div>
     );
   }

@@ -51,8 +51,22 @@ export default function CheckoutUser() {
 
       <section className="flex flex-col items-center mt-5 w-full pl-2 pr-2 drop-shadow-md">
         <div className="flex gap-4 lg:w-2/3 w-full">
-          <input readOnly type="text" placeholder="First name" value={autoFill ? "John" : ""} aria-label="Inputfield for first name" className="p-3 w-full border bg-card rounded text-custom" />
-          <input readOnly type="text" placeholder="Last name" value={autoFill ? "Doe" : ""} aria-label="Inputfield for last name" className="p-3 w-full border bg-card rounded text-custom" />
+          <input
+            readOnly
+            type="text"
+            placeholder="First name"
+            value={autoFill ? "John" : ""}
+            aria-label="Inputfield for first name"
+            className="p-3 w-full font-afacad border bg-card rounded text-custom"
+          />
+          <input
+            readOnly
+            type="text"
+            placeholder="Last name"
+            value={autoFill ? "Doe" : ""}
+            aria-label="Inputfield for last name"
+            className="p-3 w-full font-afacad border bg-card rounded text-custom"
+          />
         </div>
 
         <div className="flex gap-4 mt-3 lg:w-2/3 w-full">
@@ -62,7 +76,7 @@ export default function CheckoutUser() {
             placeholder="E-mail address"
             aria-label="Inputfield for e-mail"
             value={autoFill ? "john.doe@email.com" : ""}
-            className="p-3 w-full border bg-card rounded text-custom"
+            className="p-3 w-full font-afacad border bg-card rounded text-custom"
           />
           <input
             readOnly
@@ -70,7 +84,7 @@ export default function CheckoutUser() {
             placeholder="Verify e-mail"
             aria-label="Inputfield for e-mail"
             value={autoFill ? "john.doe@email.com" : ""}
-            className="p-3 w-full border bg-card rounded text-custom"
+            className="p-3 w-full font-afacad border bg-card rounded text-custom"
           />
         </div>
 
@@ -81,7 +95,7 @@ export default function CheckoutUser() {
             placeholder="Country / Region"
             value={autoFill ? "Sweden" : ""}
             aria-label="Inputfield for country / region"
-            className="p-3 w-full border bg-card rounded text-custom"
+            className="p-3 w-full font-afacad border bg-card rounded text-custom"
           />
           <input
             readOnly
@@ -89,7 +103,7 @@ export default function CheckoutUser() {
             placeholder="Street address"
             value={autoFill ? "123 Street" : ""}
             aria-label="Inputfield for street address"
-            className="p-3 w-full mt-3 border bg-card rounded text-custom"
+            className="p-3 w-full font-afacad mt-3 border bg-card rounded text-custom"
           />
           <input
             readOnly
@@ -97,7 +111,7 @@ export default function CheckoutUser() {
             placeholder="Town / City"
             value={autoFill ? "Stockholm" : ""}
             aria-label="Inputfield for town / city"
-            className="p-3 w-full mt-3 border bg-card rounded text-custom"
+            className="p-3 w-full font-afacad mt-3 border bg-card rounded text-custom"
           />
           <input
             readOnly
@@ -105,13 +119,13 @@ export default function CheckoutUser() {
             placeholder="Postcode / ZIP"
             aria-label="Inputfield for ZIP code"
             value={autoFill ? zipCode : ""}
-            className="p-3 w-full mt-3 border bg-card rounded text-custom"
+            className="p-3 w-full font-afacad mt-3 border bg-card rounded text-custom"
           />
         </div>
 
         <button
           onClick={handlePlaceOrder}
-          className={`text-white font-bold py-3 px-6 rounded drop-shadow-md transition text-xl mt-8 ${thankYou ? "bg-green-500 scale-105" : "bg-blue-500 hover:bg-blue-600"}`}
+          className={`text-white font-audiowide py-3 px-6 rounded drop-shadow-md transition text-xl mt-8 ${thankYou ? "bg-green-500 scale-105" : "bg-blue-500 hover:bg-blue-600"}`}
         >
           {thankYou ? "Thank You" : "Place Order"}
         </button>

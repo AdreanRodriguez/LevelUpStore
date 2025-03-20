@@ -19,6 +19,7 @@ export default function Games() {
   const [loading, setLoading] = useState(true);
   const [totalPages, setTotalPages] = useState(1);
   const [games, setGames] = useState<Product[]>([]);
+  const [maxVisiblePages, setMaxVisiblePages] = useState(10);
 
   const page = Number(searchParams.get("page")) || 1;
   const MAX_PAGES = 12;
@@ -55,19 +56,52 @@ export default function Games() {
   }, [getGames]);
 
   // useCallback för sidhantering
-  const handlePageChange = useCallback(
-    (newPage: number) => {
-      if (newPage !== page) {
-        router.push(`/games?page=${newPage}`);
+  const handlePageChange = (newPage: number) => {
+    if (newPage !== page) {
+      router.push(`/games?page=${newPage}`);
+    }
+  };
+
+  // Funktion för att anpassa MAX_VISIBLE_PAGES beroende på skärmbredd
+  useEffect(() => {
+    const updateMaxVisiblePages = () => {
+      let newMax;
+      let width = window.innerWidth;
+
+      if (width < 430) {
+        newMax = 3; // Mobil
+      } else if (width < 640) {
+        newMax = 5; // Mobil
+      } else if (width < 1024) {
+        newMax = 7; // Tablet
+      } else {
+        newMax = 10; // Desktop
       }
-    },
-    [router, page]
-  );
+
+      if (newMax !== maxVisiblePages) {
+        setMaxVisiblePages(newMax);
+      }
+    };
+
+    window.addEventListener("resize", updateMaxVisiblePages);
+    updateMaxVisiblePages(); // Kör en gång direkt
+
+    return () => window.removeEventListener("resize", updateMaxVisiblePages);
+  }, [maxVisiblePages]);
 
   // Pagination logic
-  const MAX_VISIBLE_PAGES = 10;
-  const startPage = Math.max(1, page - Math.floor(MAX_VISIBLE_PAGES / 2));
-  const endPage = Math.min(totalPages, startPage + MAX_VISIBLE_PAGES - 1);
+  const totalPageCount = Math.min(totalPages, MAX_PAGES);
+  const halfVisible = Math.floor(maxVisiblePages / 2);
+
+  let startPage = Math.max(1, page - halfVisible);
+  let endPage = Math.min(totalPageCount, startPage + maxVisiblePages - 1);
+
+  // Om vi når slutet, justera startPage så att maxVisiblePages alltid visas
+  if (endPage - startPage + 1 < maxVisiblePages) {
+    startPage = Math.max(1, endPage - maxVisiblePages + 1);
+  }
+
+  // Skapa sidlistan
   const pages = Array.from({ length: endPage - startPage + 1 }, (_, i) => startPage + i);
 
   return (
@@ -90,10 +124,10 @@ export default function Games() {
                   <figure className="aspect-video">
                     <Image src={product.background_image || fallbackImage} alt={product.name} width={400} height={225} priority={index === 0} className="rounded mb-3 w-full h-full" />
                   </figure>
-                  <h2 className="text-xl">{product.name}</h2>
+                  <h2 className="text-xl font-afacad">{product.name}</h2>
                 </Link>
 
-                <p className="text-xl text-custom pt-2 pb-2">Rating: ⭐({product.rating})</p>
+                <p className="text-xl pt-2 pb-2 font-afacad">Rating: ⭐({product.rating})</p>
                 <p
                   className={`pt-8 pr-5 pl-5 font-afacad font-bold pb-4 flex justify-end text-2xl ${
                     typeof releaseYear === "number" && releaseYear < 2010 ? "text-red-500" : "text-black dark:text-[#e2e2e2]"
@@ -103,7 +137,7 @@ export default function Games() {
                 </p>
 
                 <div className="flex justify-between items-center">
-                  <div className="flex space-x-2 mt-2 text-custom justify-end items-center">
+                  <div className="flex space-x-2 mt-2 justify-end items-center">
                     {product.parent_platforms?.slice(0, 4).map(({ platform }) => (
                       <Image width={24} height={24} priority={false} key={platform.id} alt={platform.name} className="invert dark:invert-0" src={`/platform/${platform.id}.svg`} />
                     ))}
@@ -126,29 +160,29 @@ export default function Games() {
         <button
           onClick={() => handlePageChange(page - 1)}
           disabled={page <= 1}
-          className="sm:px-4 px-2 sm:py-2 py-1 border rounded bg-gray-200 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-300 transition"
+          className="sm:px-4 px-2 font-afacad sm:py-2 py-2 border rounded bg-gray-200 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-300 transition"
         >
           Previous
         </button>
 
-        {startPage > 1 && <span className="pt-4 sm:inline dark:text-white">...</span>}
+        {startPage > 1 && <span className="pt-4 font-afacad sm:inline dark:text-white">...</span>}
 
         {pages.map((p) => (
           <button
             key={p}
             onClick={() => handlePageChange(p)}
-            className={`px-1 sm:px-4 py-1 sm:py-2 border rounded transition ${p === page ? "bg-gray-900 text-white border-gray-700" : "bg-gray-200 hover:bg-gray-300 hover:scale-105"}`}
+            className={`px-3 sm:px-4 py-2 sm:py-2 font-afacad border rounded transition ${p === page ? "bg-gray-900 text-white border-gray-700" : "bg-gray-200 hover:bg-gray-300 hover:scale-105"}`}
           >
             {p}
           </button>
         ))}
 
-        {endPage < totalPages && <span className="pt-4 sm:inline dark:text-white">...</span>}
+        {endPage < totalPages && <span className="pt-4 font-afacad sm:inline dark:text-white">...</span>}
 
         <button
           onClick={() => handlePageChange(page + 1)}
           disabled={page >= totalPages}
-          className="sm:px-4 px-1 sm:py-2 py-1 border rounded bg-gray-300 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-300 transition"
+          className="sm:px-4 px-2 sm:py-2 py-2 font-afacad border rounded bg-gray-300 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-300 transition"
         >
           Next
         </button>
