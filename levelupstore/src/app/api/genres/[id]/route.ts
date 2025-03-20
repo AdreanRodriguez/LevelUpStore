@@ -3,12 +3,12 @@ import { ProductListResponse } from "@/app/types/product";
 import { errorResponse, successResponse } from "@/app/utils/response";
 
 const API_KEY = process.env.NEXT_PUBLIC_RAWG_API_KEY;
-const API_URL_GENRES = "https://api.rawg.io/api/genres";
 const API_URL_GAMES = "https://api.rawg.io/api/games";
+const API_URL_GENRES = "https://api.rawg.io/api/genres";
 
-export async function GET(req: Request, { params }: { params: { id: string } }) {
+export async function GET(req: Request, { params }: { params: Promise<{ id: string }> }) {
   try {
-    const { id } = params;
+    const { id } = await params;
 
     if (!id) {
       return errorResponse("Genre ID is missing in the route parameters.", 400);
