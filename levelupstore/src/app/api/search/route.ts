@@ -19,7 +19,7 @@ export async function GET(request: Request) {
     }
 
     // Bygg URL för sökningen
-    const url = `${API_URL_SEARCH}?key=${API_KEY}&search=${encodeURIComponent(query)}&page_size=10`;
+    const url = `${API_URL_SEARCH}?key=${API_KEY}&search=${encodeURIComponent(query)}&page_size=50`;
 
     // Hämta data från RAWG:s API
     const response = await fetch(url);

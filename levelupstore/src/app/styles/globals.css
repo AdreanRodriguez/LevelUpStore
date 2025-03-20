@@ -1,14 +1,15 @@
 @tailwind base;
 @tailwind utilities;
 @tailwind components;
-/* @import url("https://fonts.googleapis.com/css2?family=Afacad:ital,wght@0,400..700;1,400..700&family=Audiowide&family=PT+Sans:ital,wght@0,400;0,700;1,400;1,700&family=Pacifico&family=Righteous&family=Stalinist+One&display=swap"); */
 
 :root {
   --textColor-light: #303030;
-  --textColor-dark: #dbdbdb;
+  --textColor-dark: #ebebeb;
+
   --background-light: #f5f5f5;
-  --background-dark: #121212;
-  --background-dark-card: #2f2f2f;
+  --background-dark: #282b30;
+
+  --background-dark-card: #555555;
   --background-light-card: #ffffff;
 }
 
