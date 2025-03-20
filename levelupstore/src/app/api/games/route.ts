@@ -14,7 +14,7 @@ export async function GET(req: Request) {
     const { searchParams } = new URL(req.url);
     const page = searchParams.get("page") || "1";
 
-    const response = await fetch(`${API_URL_GAMES}?key=${API_KEY}&page=${page}&page_size=12&ordering=-added`);
+    const response = await fetch(`${API_URL_GAMES}?key=${API_KEY}&page=${page}&page_size=20&ordering=-added`);
 
     if (!response.ok) {
       return errorResponse(`Failed to fetch games: ${response.statusText}`, response.status);

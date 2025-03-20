@@ -13,7 +13,7 @@ export default function Header() {
   return (
     <header className="sticky flex items-center justify-center flex-col border-b-2 top-0 z-10 px-2 py-4 bg-custom max-w-mainSize m-auto">
       <ThemeSwitcher />
-      <h1 className=" font-righteous text-2xl mb-4 text-custom sm:text-4xl">
+      <h1 className=" font-righteous text-2xl mb-4 dark:text-[#ff7300] text-[#299fff] sm:text-4xl">
         <Link href={"/"}>LevelUp Store</Link>
       </h1>
       <Link href="/cart" className="absolute right-5 top-8 sm:top-10 h-8 w-8 sm:h-10 sm:w-10">

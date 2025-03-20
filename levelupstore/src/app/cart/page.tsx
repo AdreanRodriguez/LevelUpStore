@@ -4,7 +4,6 @@ import Link from "next/link";
 import Image from "next/image";
 import { useAtom } from "jotai";
 import { addToCartAtom, cartAtom, cartTotalPriceAtom, removeFromCartAtom } from "../store/cart";
-import { style } from "framer-motion/client";
 
 export default function CartPage() {
   const [cart] = useAtom(cartAtom);

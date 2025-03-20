@@ -8,6 +8,7 @@ import { Product } from "@/app/types/product";
 import { useSearchParams } from "next/navigation";
 import getPriceByYear from "../utils/getPriceByYear";
 import { fetchSearchedGames } from "@/app/lib/fetcher";
+import { GameCard } from "./GameCard";
 
 export default function Search() {
   const searchParams = useSearchParams();
@@ -61,8 +62,6 @@ export default function Search() {
     return () => controller.abort(); // Avbryt anrop om komponenten avmonteras eller query ändras
   }, [query]);
 
-  const fallbackImage = "/fallbackImage.svg";
-
   return (
     <div className="p-5">
       <h1 className="text-2xl text-custom font-bold mb-4">
@@ -74,36 +73,13 @@ export default function Search() {
       ) : errorMessage ? (
         <p className="text-red-500 text-lg">{errorMessage}</p> // Visar felmeddelande om inget hittas
       ) : results.length > 0 ? (
-        <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          {results.map((result) => {
-            const releaseYear = result.released && result.released !== "N/A" ? new Date(result.released).getFullYear() : "N/A";
-
-            const price = releaseYear !== "N/A" && typeof releaseYear === "number" ? `$${getPriceByYear(releaseYear).toFixed(2)}` : "N/A";
-
-            return (
-              <li key={result.id} className="block p-4 border rounded shadow hover:shadow-lg bg-card text-custom">
-                <Link href={`/search/${result.id}`}>
-                  <figure className="aspect-video">
-                    <Image
-                      src={result.background_image || fallbackImage}
-                      alt={`background image for ${result.name}`}
-                      width={500}
-                      height={300}
-                      className={`rounded mb-3 w-full h-full ${result.background_image ? "object-cover" : "object-contain p-5"}`}
-                      onError={(e) => {
-                        (e.target as HTMLImageElement).src = fallbackImage;
-                      }}
-                    />
-                  </figure>
-                  <h2 className="text-xl font-semibold">{result.name}</h2>
-                  <p className="text-sm text-gray-500">Rating: {result.rating}</p>
-                  <p className="text-xl">{releaseYear}</p>
-                  <p className={`text-xl font-bold pt-5 ${typeof releaseYear === "number" && releaseYear < 2010 ? "text-red-500" : "text-ellipsis"}`}>{price}</p>
-                </Link>
-              </li>
-            );
-          })}
-        </ul>
+        <section className="grid grid-cols-autoFit gap-4 flex-1">
+          {results
+            .filter((game) => game.released) // Kolla först om released finns med (För att kunna sätta priset)
+            .map((game, index) => (
+              <GameCard key={game.id} game={game} index={index} />
+            ))}
+        </section>
       ) : null}
     </div>
   );
