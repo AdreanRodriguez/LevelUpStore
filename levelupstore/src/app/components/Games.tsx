@@ -66,16 +66,15 @@ export default function Games() {
   useEffect(() => {
     const updateMaxVisiblePages = () => {
       let newMax;
-      let width = window.innerWidth;
 
-      if (width < 430) {
-        newMax = 3; // Mobil
-      } else if (width < 640) {
-        newMax = 5; // Mobil
-      } else if (width < 1024) {
-        newMax = 7; // Tablet
+      if (window.innerWidth < 430) {
+        newMax = 3;
+      } else if (window.innerWidth < 640) {
+        newMax = 5;
+      } else if (window.innerWidth < 1024) {
+        newMax = 7;
       } else {
-        newMax = 10; // Desktop
+        newMax = 10;
       }
 
       if (newMax !== maxVisiblePages) {
@@ -94,7 +93,7 @@ export default function Games() {
   const halfVisible = Math.floor(maxVisiblePages / 2);
 
   let startPage = Math.max(1, page - halfVisible);
-  let endPage = Math.min(totalPageCount, startPage + maxVisiblePages - 1);
+  const endPage = Math.min(totalPageCount, startPage + maxVisiblePages - 1);
 
   // Om vi når slutet, justera startPage så att maxVisiblePages alltid visas
   if (endPage - startPage + 1 < maxVisiblePages) {
@@ -129,7 +128,7 @@ export default function Games() {
 
                 <p className="text-xl pt-2 pb-2 font-afacad">Rating: ⭐({product.rating})</p>
                 <p
-                  className={`pt-8 pr-5 pl-5 font-afacad font-bold pb-4 flex justify-end text-2xl ${
+                  className={`pt-8 pr-5 pl-5 font-afacad font-bold pb-4 flex justify-end text-2xl sm:text-xl ${
                     typeof releaseYear === "number" && releaseYear < 2010 ? "text-red-500" : "text-black dark:text-[#e2e2e2]"
                   }`}
                 >
@@ -139,7 +138,7 @@ export default function Games() {
                 <div className="flex justify-between items-center">
                   <div className="flex space-x-2 mt-2 justify-end items-center">
                     {product.parent_platforms?.slice(0, 4).map(({ platform }) => (
-                      <Image width={24} height={24} priority={false} key={platform.id} alt={platform.name} className="invert dark:invert-0" src={`/platform/${platform.id}.svg`} />
+                      <Image width={13} height={13} priority={false} key={platform.id} alt={platform.name} className="invert dark:invert-0" src={`/platform/${platform.id}.svg`} />
                     ))}
                     {product.parent_platforms?.length > 4 && (
                       <span className="flex items-end">

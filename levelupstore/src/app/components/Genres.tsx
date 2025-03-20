@@ -40,11 +40,11 @@ export default function Genres() {
   if (error) return <p className="text-red-500 font-afacad">{error}</p>;
 
   return (
-    <div className="text-3xl mb-4 text-custom pl-2">
-      <ul className="text-custom font-righteous grid grid-cols-[repeat(auto-fill,minmax(160px,1fr))] text-center">
+    <div className="mb-4 text-custom pl-2">
+      <ul className="text-custom font-audiowide grid grid-cols-[repeat(auto-fill,minmax(160px,1fr))] text-center">
         {genres.map((genre) => (
-          <li key={genre.id} className="text-custom">
-            <Link href={`/genres/${genre.id}`} className="flex mb-6 text-custom items-center">
+          <li key={genre.id}>
+            <Link href={`/genres/${genre.id}`} className="flex mb-6 items-center">
               <Image
                 src={genre.image_background}
                 alt={`${genre.name} image`}
@@ -53,7 +53,7 @@ export default function Genres() {
                 className="aspect-square object-cover size-12 md:size-10 rounded-xl mr-2 text-justify"
                 priority={false}
               />
-              <p className="text-custom text-xl hover:text-[#7a7a7a] hover:underline underline-offset-8">{genre.name}</p>
+              <p className="text-[1rem] hover:text-[#7a7a7a] hover:underline underline-offset-8">{genre.name}</p>
             </Link>
           </li>
         ))}
