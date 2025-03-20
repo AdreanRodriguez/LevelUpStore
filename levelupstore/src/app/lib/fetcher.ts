@@ -1,7 +1,6 @@
 import { Genres, GenresListResponse } from "@/app/types/genres";
 import { ProductApiResponse, Product, ProductListResponse } from "@/app/types/product";
 
-//*& GLÖM INTE
 const API_URL = process.env.NEXT_PUBLIC_BASE_URL;
 // const localhost = "http://localhost:3000";
 
@@ -24,7 +23,7 @@ async function safeFetch<T>(url: string, signal?: AbortSignal): Promise<T> {
     return await response.json();
   } catch (error) {
     if (error instanceof DOMException && error.name === "AbortError") {
-      console.warn("Fetch aborted:", url); // Om anropet avbryts, skriv ut en varning
+      console.warn("Fetch aborted:", url);
       throw error;
     } else if (error instanceof Error) {
       console.error(`${URL_ERROR} ${url}: ${error.message}`);
