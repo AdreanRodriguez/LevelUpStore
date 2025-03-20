@@ -4,6 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { useAtom } from "jotai";
 import { addToCartAtom, cartAtom, cartTotalPriceAtom, removeFromCartAtom } from "../store/cart";
+import { style } from "framer-motion/client";
 
 export default function CartPage() {
   const [cart] = useAtom(cartAtom);
@@ -28,17 +29,20 @@ export default function CartPage() {
                     </div>
                   )}
 
-                  <div className="flex-1 sm:ml-4 text-center sm:text-left">
+                  <div className="flex-1 lg:ml-4 text-center sm:text-left">
                     <h2 className="text-xl font-righteous">{item.name}</h2>
                     {"price" in item && <p className="font-afacad font-bold text-lg lg:text-left lg:ml-0 lg:mt-2 sm:text-center m-3  mt-2">${item.price.toFixed(2)}</p>}
                   </div>
 
                   <div className="flex items-center space-x-4">
-                    <button onClick={() => removeFromCart(item.id)} className="text-white lg:px-5 text-xl bg-red-500 hover:bg-red-600 px-3 py-2 rounded">
+                    <button onClick={() => removeFromCart(item.id)} className="text-white lg:px-5 text-xl bg-red-500 hover:bg-red-600 md:py-2 sm:p-3 px-3 py-2 rounded active:scale-95">
                       -
                     </button>
                     <span className="text-lg font-semibold">{item.quantity}</span>
-                    <button onClick={() => addToCart(item)} className="text-white lg:px-5 text-xl bg-green-500 hover:bg-green-600 px-3 py-2 rounded">
+                    <button
+                      onClick={() => addToCart(item)}
+                      className="text-white lg:px-5 text-xl bg-green-500 hover:bg-green-600 md:py-2 sm:p-3 px-3 py-2 rounded flex items-center justify-center active:scale-95"
+                    >
                       +
                     </button>
                   </div>
