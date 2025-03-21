@@ -26,7 +26,6 @@ export const GameCard: React.FC<GameCardProps> = ({ game, index }) => {
         <h2 className="text-xl font-afacad p-2">{game.name}</h2>
       </Link>
 
-      <p className="text-lg font-afacad p-2">{game.released.slice(0, 4)}</p>
       <p className="text-lg font-afacad p-2">Rating: ⭐({game.rating})</p>
 
       <p className={`pr-2 pt-6 font-afacad font-bold flex justify-end text-xl ${redPrice ? "text-red-600 dark:text-red-600" : "text-black dark:text-[#e2e2e2]"}`}>{price}</p>
