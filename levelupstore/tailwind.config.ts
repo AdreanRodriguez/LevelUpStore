@@ -1,7 +1,7 @@
 import type { Config } from "tailwindcss";
 
 export default {
-  content: ["./src/pages/**/*.{js,ts,jsx,tsx,mdx}", "./src/components/**/*.{js,ts,jsx,tsx,mdx}", "./src/app/**/*.{js,ts,jsx,tsx,mdx}", ".src/app/styles/globals.css"],
+  content: ["./src/pages/**/*.{js,ts,jsx,tsx,mdx}", "./src/components/**/*.{js,ts,jsx,tsx,mdx}", "./src/app/**/*.{js,ts,jsx,tsx,mdx}", "./src/app/styles/globals.css"],
   darkMode: "class",
   theme: {
     extend: {
@@ -15,11 +15,6 @@ export default {
       },
       gridTemplateColumns: {
         autoFit: "repeat(auto-fit, minmax(250px, 1fr))",
-      },
-      colors: {
-        textColor: "var(--textColor)",
-        background: "var(--background)",
-        bgCard: "var(--bgCard)",
       },
       keyframes: {
         pulseSize: {

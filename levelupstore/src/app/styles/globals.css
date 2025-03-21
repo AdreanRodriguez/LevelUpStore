@@ -9,8 +9,14 @@
   --background-light: #f5f5f5;
   --background-dark: #282b30;
 
-  --background-dark-card: #555555;
-  --background-light-card: #ffffff;
+  --background-light-card: linear-gradient(0deg, rgb(255, 255, 255) 0%, rgb(197, 197, 197) 100%);
+  --background-dark-card: linear-gradient(0deg, rgb(67, 67, 67) 0%, rgb(0, 0, 0) 100%);
+
+  --background-light-dropdown: linear-gradient(90deg, rgb(255, 255, 255) 0%, rgb(197, 197, 197) 100%);
+  --background-dark-dropdown: linear-gradient(260deg, rgb(67, 67, 67) 0%, rgb(0, 0, 0) 100%);
+
+  --background-light-searchBar: linear-gradient(90deg, rgb(255 255 255) 0%, rgb(197 197 197 / 20%) 100%);
+  --background-dark-searchBar: linear-gradient(260deg, rgb(255 255 255) -170%, rgb(197 197 197 / 20%) 100%);
 }
 
 /* Textfärger */
@@ -22,13 +28,29 @@
   color: var(--textColor-dark);
 }
 
+/* sökfältet */
+.dark .bg-searchBarBackground {
+  background: var(--background-dark-searchBar);
+}
+.bg-searchBarBackground {
+  background: var(--background-light-searchBar);
+}
+/* Dropdownmenyn */
+.dark .bg-dropdown {
+  background: var(--background-dark-dropdown);
+}
+
+.bg-dropdown {
+  background: var(--background-light-dropdown);
+}
+
 /* Bakgrundsfärg på kort */
 .bg-card {
-  background-color: var(--background-light-card);
+  background: var(--background-light-card);
 }
 
 .dark .bg-card {
-  background-color: var(--background-dark-card);
+  background: var(--background-dark-card);
 }
 
 /* Bakgrundsfärger */

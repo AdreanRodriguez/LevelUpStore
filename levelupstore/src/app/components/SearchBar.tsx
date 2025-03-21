@@ -15,16 +15,23 @@ export default function SearchBar() {
 
   const router = useRouter();
   const dropdownRef = useRef<HTMLDivElement | null>(null);
+  const controllerRef = useRef<AbortController | null>(null);
 
   useEffect(() => {
     if (!searchQuery.trim()) {
-      setSearchResults([]); // Om användaren tömmer input, töm dropdown
+      setSearchResults([]);
       setIsDropdownOpen(false);
       return;
     }
 
-    // Skapa en AbortController för att avbryta gamla requests
+    // Avbryt tidigare anrop om ett nytt startas
+    if (controllerRef.current) {
+      controllerRef.current.abort();
+    }
+
+    // Skapa en ny AbortController
     const controller = new AbortController();
+    controllerRef.current = controller;
     const signal = controller.signal;
 
     const fetchResults = async () => {
@@ -32,7 +39,7 @@ export default function SearchBar() {
       try {
         const { results } = await fetchSearchedGames(searchQuery, signal);
         if (results.length > 0) {
-          setSearchResults(results.slice(0, 10)); // Begränsa antal sökresultat
+          setSearchResults(results.slice(0, 10));
           setIsDropdownOpen(true);
         } else {
           setSearchResults([]);
@@ -61,6 +68,12 @@ export default function SearchBar() {
 
     const handleClickOutside = (event: MouseEvent) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        // Avbryt API-anropet om dropdownen stängs
+        if (controllerRef.current) {
+          controllerRef.current.abort();
+        }
+
+        setSearchQuery("");
         setIsDropdownOpen(false);
       }
     };
@@ -83,7 +96,6 @@ export default function SearchBar() {
       }
     }
   };
-
   const handleLinkClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
     e.stopPropagation();
     setIsDropdownOpen(false);
@@ -101,15 +113,17 @@ export default function SearchBar() {
         aria-label="Search for games"
         placeholder="Search games..."
         onChange={(e) => setSearchQuery(e.target.value)}
-        className="w-full p-2 border bg-card rounded text-custom drop-shadow-md"
+        className="w-full p-2 bg-searchBarBackground focus:bg-white focus:text-slate-800 rounded text-[#c5c5c5] drop-shadow-md"
       />
 
       {isDropdownOpen && searchResults.length > 0 && (
-        <ul className="absolute w-full bg-card border-bg-custom mt-1 rounded shadow-lg z-10 pointer-events-auto">
+        <ul className="absolute w-full bg-dropdown mt-1 font-afacad text-sm sm:text-lg rounded shadow-lg z-10 pointer-events-auto">
           {searchResults.map((result, index) => (
             <li
               key={result.id}
-              className={`p-2 cursor-pointer ${highlightedIndex === index ? "bg-[#939393] text-white" : "hover:bg-[#939393] hover:text-white dark:text-white dark:hover:bg-[#4b4b4b]"}`}
+              className={`p-2 cursor-pointer ${
+                highlightedIndex === index ? "bg-[#9393937a] text-white" : "hover:bg-dropdown hover:text-black hover:font-semibold dark:text-white dark:hover:bg-[#4b4b4b]"
+              }`}
             >
               <Link href={`/search?query=${encodeURIComponent(result.name)}`} onClick={handleLinkClick} aria-label={`View results for ${result.name}`}>
                 {result.name}

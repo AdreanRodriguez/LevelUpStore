@@ -69,11 +69,11 @@ const ThemeSwitcher: React.FC = () => {
   };
 
   return (
-    <div className="absolute left-2 top-9 z-[11]">
+    <div className="absolute left-2 top-10 z-[11]">
       <button
         onClick={() => setTheme(currentTheme === "dark" ? "light" : "dark")}
         type="button"
-        className={`overflow-hidden p-0.5 h-8 w-8 sm:h-10 sm:w-10 flex items-center justify-center rounded-md backdrop-brightness-90 dark:bg-slate-600
+        className={`overflow-hidden p-0.5 h-8 w-8 sm:h-10 sm:w-10 flex items-center justify-center rounded-md backdrop-brightness-125 dark:bg-slate-600
           ${currentTheme === "dark" ? "border-white text-white" : "border-gray-800 text-gray-800"} 
           focus:outline-none focus:ring-0 focus:ring-gray-200`}
         aria-label={currentTheme === "dark" ? "Switch to light mode" : "Switch to dark mode"}
