@@ -6,7 +6,7 @@ const API_KEY = process.env.NEXT_PUBLIC_RAWG_API_KEY;
 const API_URL_GAMES = "https://api.rawg.io/api/games";
 const API_URL_GENRES = "https://api.rawg.io/api/genres";
 
-export async function GET(req: Request, { params }: { params: Promise<{ id: string }> }) {
+export async function GET(_: Request, { params }: { params: Promise<{ id: string }> }) {
   try {
     const { id } = await params;
 
