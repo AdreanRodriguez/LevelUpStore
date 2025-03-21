@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
+import Loading from "../loading";
 import { useState, useEffect } from "react";
 import { fetchGenres } from "../lib/fetcher";
 import { Genres as GenresType } from "../types/genres";
@@ -36,7 +37,7 @@ export default function Genres() {
     return () => controller.abort(); // Avbryt anrop om användaren lämnar sidan
   }, []);
 
-  if (loading) return <p className="text-custom">Loading genre...</p>;
+  if (loading) return <Loading />;
   if (error) return <p className="text-red-500 font-afacad">{error}</p>;
 
   return (

@@ -1,14 +1,7 @@
 import { atom } from "jotai";
 import { Genres } from "../types/genres";
 import { Product } from "../types/product";
-
-// Funktion för att beräkna pris baserat på released-året
-function getPriceByYear(year: number): number {
-  if (year >= 2020) return 59.99;
-  if (year >= 2015) return 49.99;
-  if (year >= 2010) return 39.99;
-  return 9.99;
-}
+import getPriceByYear from "../utils/getPriceByYear";
 
 // Skapa separata CartItem-typer för produkter och genrer
 export interface CartItemProduct extends Product {
