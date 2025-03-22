@@ -36,7 +36,7 @@ export default function RootLayout({
         />
       </head>
 
-      <body className={`${geistSans.variable} ${geistMono.variable} antialiased bg-custom`}>
+      <body className={`${geistSans.variable} ${geistMono.variable} antialiased bg-custom size-svh`}>
         <ThemeProvider>
           <ErrorBoundary>
             <Header />

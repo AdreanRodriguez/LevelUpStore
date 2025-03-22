@@ -58,8 +58,8 @@ export default function Search() {
   }, [query]);
 
   return (
-    <div className="p-5">
-      <h1 className="text-lg sm:text-xl text-custom font-afacad font-bold mb-4">
+    <div>
+      <h1 className="text-lg sm:text-xl text-custom font-afacad font-bold mb-4 p-2">
         Search results for <span className="text-orange-500 dark:text-[#fb923c]">{query}</span>
       </h1>
 
