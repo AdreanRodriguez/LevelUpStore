@@ -1,8 +1,8 @@
 import { Genres, GenresListResponse } from "@/app/types/genres";
 import { ProductApiResponse, Product, ProductListResponse } from "@/app/types/product";
 
-// const API_URL = process.env.NEXT_PUBLIC_BASE_URL;
-const localhost = "http://localhost:3000";
+const API_URL = process.env.NEXT_PUBLIC_BASE_URL;
+// const localhost = "http://localhost:3000";
 
 async function safeFetch<T>(url: string, signal?: AbortSignal): Promise<T> {
   const HTTP_ERROR = "HTTP error! Status: ";
@@ -37,27 +37,27 @@ async function safeFetch<T>(url: string, signal?: AbortSignal): Promise<T> {
 
 // Hämta produkter
 export async function fetchGames(page: number = 1, signal?: AbortSignal): Promise<ProductListResponse> {
-  return safeFetch<ProductListResponse>(`${localhost}/api/games?page=${page}`, signal);
+  return safeFetch<ProductListResponse>(`${API_URL}/api/games?page=${page}`, signal);
 }
 
 // Hämta specifik produkt på id
 export async function fetchGameById(id: string | number, signal?: AbortSignal): Promise<Product> {
-  return safeFetch<Product>(`${localhost}/api/games/${id}`, signal);
+  return safeFetch<Product>(`${API_URL}/api/games/${id}`, signal);
 }
 
 // Hämta alla kategorier
 export async function fetchGenres(signal?: AbortSignal): Promise<GenresListResponse> {
-  return safeFetch<GenresListResponse>(`${localhost}/api/genres`, signal);
+  return safeFetch<GenresListResponse>(`${API_URL}/api/genres`, signal);
 }
 
 // Hämta kategori baserat på id
 export async function fetchGenreById(id: string, signal?: AbortSignal): Promise<{ genre: Genres; games: Product[] }> {
-  return safeFetch<{ genre: Genres; games: Product[] }>(`${localhost}/api/genres/${id}`, signal);
+  return safeFetch<{ genre: Genres; games: Product[] }>(`${API_URL}/api/genres/${id}`, signal);
 }
 
 // Sök efter spel i sökfältet
 export async function fetchSearchedGames(query: string, signal?: AbortSignal): Promise<ProductApiResponse<Product>> {
-  const response = await safeFetch<ProductApiResponse<Product>>(`${localhost}/api/search?query=${encodeURIComponent(query)}`, signal);
+  const response = await safeFetch<ProductApiResponse<Product>>(`${API_URL}/api/search?query=${encodeURIComponent(query)}`, signal);
 
   return {
     ...response,
