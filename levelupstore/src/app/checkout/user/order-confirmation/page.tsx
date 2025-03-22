@@ -7,7 +7,7 @@ import { useRouter } from "next/navigation";
 import { cartAtom, cartTotalPriceAtom, clearCartAtom } from "@/app/store/cart";
 import { v4 as uuid } from "uuid";
 
-export default function orderConfirmation() {
+export default function OrderConfirmation() {
   const [cart] = useAtom(cartAtom);
   const [, clearCart] = useAtom(clearCartAtom);
   const [totalPrice] = useAtom(cartTotalPriceAtom);

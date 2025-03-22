@@ -2,13 +2,10 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { useAtom } from "jotai";
-import { cartAtom } from "../store/cart";
 
 export default function CheckoutPage() {
   const [zipCode, setZipCode] = useState("");
   const [isValid, setIsValid] = useState(false);
-  const [cart] = useAtom(cartAtom);
 
   const router = useRouter();
 
