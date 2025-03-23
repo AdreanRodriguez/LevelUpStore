@@ -9,6 +9,8 @@ import { Product } from "@/app/types/product";
 import { fetchGenreById } from "@/app/lib/fetcher";
 import { GameCard } from "@/app/components/GameCard";
 import GridSection from "@/app/components/GridSection";
+import FilterToggle from "@/app/components/FilterToggle";
+import GenresPage from "@/app/genres/page";
 
 export default function GenreDetailPage() {
   const params = useParams();
@@ -50,9 +52,12 @@ export default function GenreDetailPage() {
 
   return (
     <section className="p-5 px-2 min-h-screen bg-custom font-righteous flex flex-col">
-      <h1 className="text-3xl font-bold pt-4 ml-2">{genre.name}</h1>
-      <p className="text-xl font-audiowide mb-10 ml-2">Games count: {games.length}</p>
-      <Image width={400} height={225} priority={false} src={genre.image_background || "/fallbackImage.svg"} alt={`${genre.name} background`} className="w-full h-auto mb-6 rounded" />
+      <FilterToggle>
+        <GenresPage />
+      </FilterToggle>
+
+      <h1 className="text-3xl font-bold pt-4 ml-2 text-custom">{genre.name}</h1>
+      <p className="text-xl font-audiowide mb-10 ml-2 text-custom">Games count: {games.length}</p>
 
       {games.length === 0 ? (
         <div className="text-center p-5">

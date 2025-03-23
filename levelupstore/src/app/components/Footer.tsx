@@ -24,12 +24,12 @@ export default function Footer() {
               </Link>
             </li>
             <li>
-              <Link href="/shipping" className="hover:underline">
+              <Link href="/" className="hover:underline">
                 Shipping & Returns
               </Link>
             </li>
             <li>
-              <Link href="/terms" className="hover:underline">
+              <Link href="/" className="hover:underline">
                 Terms & Conditions
               </Link>
             </li>
@@ -45,13 +45,8 @@ export default function Footer() {
               </Link>
             </li>
             <li>
-              <Link href="/campaigns" className="hover:underline">
+              <Link href="/" className="hover:underline">
                 Campaigns
-              </Link>
-            </li>
-            <li>
-              <Link href="/blog" className="hover:underline">
-                Blog
               </Link>
             </li>
           </ul>

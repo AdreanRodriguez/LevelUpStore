@@ -3,9 +3,9 @@
 import Link from "next/link";
 import Image from "next/image";
 import { useAtom } from "jotai";
+import { v4 as uuid } from "uuid";
 import { useRouter } from "next/navigation";
 import { cartAtom, cartTotalPriceAtom, clearCartAtom } from "@/app/store/cart";
-import { v4 as uuid } from "uuid";
 
 export default function OrderConfirmation() {
   const [cart] = useAtom(cartAtom);
@@ -49,6 +49,7 @@ export default function OrderConfirmation() {
               <div className="flex-1">
                 <h3 className="font-medium">{item.name}</h3>
                 {"price" in item && <p className="text-sm text-gray-500 dark:text-gray-400">Price: ${item.price.toFixed(2)}</p>}
+                <p className="text-sm text-gray-500 dark:text-gray-400">X {item.quantity}</p>
               </div>
             </li>
           ))}

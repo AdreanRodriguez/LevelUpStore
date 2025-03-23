@@ -2,7 +2,7 @@ import { Genres, GenresListResponse } from "@/app/types/genres";
 import { ProductApiResponse, Product, ProductListResponse } from "@/app/types/product";
 
 const API_URL = process.env.NEXT_PUBLIC_BASE_URL;
-// const localhost = "http://localhost:3000";
+// const localhost = "http://localhost:3000"; // Används vid dev mode
 
 async function safeFetch<T>(url: string, signal?: AbortSignal): Promise<T> {
   const HTTP_ERROR = "HTTP error! Status: ";

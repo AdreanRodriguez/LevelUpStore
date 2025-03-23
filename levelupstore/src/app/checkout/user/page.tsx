@@ -121,7 +121,7 @@ export default function CheckoutUser() {
         <button
           disabled={!autoFill}
           onClick={handlePlaceOrder}
-          className={`text-white font-audiowide py-3 px-6 rounded drop-shadow-md transition disabled:cursor-not-allowed disabled:bg-slate-500 disabled:opacity-30 text-xl mt-8 ${
+          className={`text-white font-audiowide py-3 px-6 rounded drop-shadow-md transition disabled:cursor-not-allowed disabled:bg-slate-500 dark:disabled:bg-slate-500 disabled:opacity-30 text-xl mt-8 ${
             thankYou ? "bg-green-500 scale-105" : "bg-blue-500 hover:bg-blue-600 dark:bg-orange-500 hover:dark:bg-orange-600"
           }`}
         >
