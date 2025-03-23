@@ -28,7 +28,7 @@ export default function CartPage() {
               )}
 
               <div className="flex flex-col flex-grow items-center lg:items-start text-center lg:text-left p-6">
-                <h2 className="text-xl sm:text-2xl font-semibold mb-2 font-righteous">{item.name}</h2>
+                <h2 className="text-xl sm:text-2xl mb-2 font-righteous">{item.name}</h2>
                 {"price" in item && <p className="text-xl font-bold font-afacad text-custom">${item.price.toFixed(2)}</p>}
               </div>
 

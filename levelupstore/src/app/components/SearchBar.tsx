@@ -93,6 +93,7 @@ export default function SearchBar() {
         router.push(`/search?query=${encodeURIComponent(selectedResult.name)}`);
         setIsDropdownOpen(false);
         setSearchQuery("");
+        window.scrollTo(0, 0); // Skrolla längst upp på sidan
       }
     }
   };

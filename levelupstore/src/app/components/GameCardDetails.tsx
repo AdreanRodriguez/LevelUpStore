@@ -20,7 +20,7 @@ export default function GameCardDetails({ game }: GameCardDetailsProps) {
   return (
     <div className="p-0.5 min-h-screen text-custom">
       {/* Spelets titel &  bild*/}
-      <h2 className="text-xl sm:text-2xl mb-3 font-audiowide">{game.name}</h2>
+      <h2 className="text-xl sm:text-2xl mb-3 mt-3 font-audiowide">{game.name}</h2>
       <Link href={`/games/${game.id}`} className="block">
         <figure className="w-full">
           <Image src={game.background_image || fallbackImage} alt={game.name} width={400} height={225} priority={false} className="rounded mb-3 w-full h-full object-cover" />
@@ -40,17 +40,12 @@ export default function GameCardDetails({ game }: GameCardDetailsProps) {
       {/* Rating */}
       <p className="text-sm sm:text-xl font-afacad mb-2">Rating: ⭐({game.rating})</p>
 
-      {/* Plattformar & Köp-knapp */}
+      {/* Plattformar */}
       <div className="flex justify-between">
         <div className="flex mt-2 space-x-2">
-          {game.parent_platforms?.slice(0, 4).map(({ platform }) => (
+          {game.parent_platforms?.map(({ platform }) => (
             <Image width={24} height={24} priority={false} key={platform.id} alt={platform.name} className="invert dark:invert-0" src={`/platform/${platform.id}.svg`} />
           ))}
-          {game.parent_platforms?.length > 4 && (
-            <span className="flex items-end">
-              <p className="text-xl">...</p>
-            </span>
-          )}
         </div>
       </div>
 
