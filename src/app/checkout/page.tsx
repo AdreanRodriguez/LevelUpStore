@@ -41,7 +41,7 @@ export default function CheckoutPage() {
       {cart.length === 0 ? (
         <NotFound />
       ) : (
-        <div className="ml-3">
+        <section className="ml-3">
           <p className="text-sm font-righteous mt-5 text-custom text-gray-700">Enter your 5-digitpostcode / ZIP:</p>
           <input
             type="text"
@@ -61,7 +61,7 @@ export default function CheckoutPage() {
           >
             Next
           </button>
-        </div>
+        </section>
       )}
     </>
   );

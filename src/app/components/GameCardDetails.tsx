@@ -18,7 +18,7 @@ export default function GameCardDetails({ game }: GameCardDetailsProps) {
   const redPrice = typeof releaseYear === "number" && releaseYear < 2010;
 
   return (
-    <div className="p-0.5 min-h-screen text-custom">
+    <section className="p-0.5 min-h-screen text-custom">
       {/* Spelets titel &  bild*/}
       <h2 className="text-xl sm:text-2xl mb-3 mt-3 font-audiowide">{game.name}</h2>
       <Link href={`/games/${game.id}`} className="block">
@@ -57,6 +57,6 @@ export default function GameCardDetails({ game }: GameCardDetailsProps) {
       </div>
 
       <div className="mt-6 text-sm sm:text-xl font-thin font-afacad">{game.description_raw && <p className="">{game.description_raw}</p>}</div>
-    </div>
+    </section>
   );
 }

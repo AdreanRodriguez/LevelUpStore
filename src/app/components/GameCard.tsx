@@ -18,7 +18,7 @@ export const GameCard: React.FC<GameCardProps> = ({ game, index }) => {
   const redPrice = typeof releaseYear === "number" && releaseYear < 2010;
 
   return (
-    <div className="min-h-96 border-gray-600 rounded hover:shadow-lg bg-card text-custom flex flex-col justify-between">
+    <article className="min-h-96 border-gray-600 rounded hover:shadow-lg bg-card text-custom flex flex-col justify-between">
       <Link href={`/games/${game.id}`} title={`View details for ${game.name}`}>
         <figure className="aspect-video">
           <Image src={game.background_image || fallbackImage} alt={game.name} width={400} height={225} priority={index === 0} className="rounded mb-3 w-full h-full" />
@@ -43,6 +43,6 @@ export const GameCard: React.FC<GameCardProps> = ({ game, index }) => {
         </div>
         <BuyButton item={game} />
       </div>
-    </div>
+    </article>
   );
 };

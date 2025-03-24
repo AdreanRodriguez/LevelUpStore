@@ -35,7 +35,9 @@ export default function OrderConfirmation() {
     }
 
     // När pathname ändras från denna komponent (SPA navigation)
-    return () => clearCart();
+    return () => {
+      clearCart();
+    };
   }, [pathname]);
 
   return (

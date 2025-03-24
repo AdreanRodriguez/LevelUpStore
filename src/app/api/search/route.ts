@@ -18,10 +18,10 @@ export async function GET(request: Request) {
       return errorResponse("Missing API key. Ensure NEXT_PUBLIC_RAWG_API_KEY is set.", 500);
     }
 
-    // Bygg URL för sökningen
+    // URL för sökningen
     const url = `${API_URL_SEARCH}?key=${API_KEY}&search=${encodeURIComponent(query)}&page_size=50`;
 
-    // Hämta data från RAWG:s API
+    // Data från RAWG:s API
     const response = await fetch(url);
 
     if (!response.ok) {
