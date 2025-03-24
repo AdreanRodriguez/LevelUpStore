@@ -88,12 +88,9 @@ const ThemeSwitcher: React.FC = () => {
             d={currentTheme === "dark" ? moonPath : sunPath}
             initial={{ opacity: 0, scale: 0 }}
             animate={{
-              // d: currentTheme === "dark" ? moonPath : sunPath,
               opacity: 1,
               rotate: currentTheme === "dark" ? -360 : 0,
-              scale: currentTheme === "dark" ? 1.8 : 1, // Justera skalan
-              // x: currentTheme === "dark" ? -40 : 0, // Flytta månen / solen
-              // y: currentTheme === "dark" ? -40 : 0, // Flytta månen / solen
+              scale: currentTheme === "dark" ? 1.8 : 1,
             }}
             transition={{
               duration: 0.8,

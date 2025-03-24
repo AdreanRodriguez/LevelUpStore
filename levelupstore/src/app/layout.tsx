@@ -5,6 +5,7 @@ import Footer from "./components/Footer";
 import { Geist, Geist_Mono } from "next/font/google";
 import ThemeProvider from "./components/ThemeProvider";
 import ErrorBoundary from "@/app/components/errorBoundary/ErrorBoundary";
+import SyncCartToLocalStorage from "./components/SyncCartToLocalStorage";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -39,6 +40,7 @@ export default function RootLayout({
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased bg-custom size-svh`}>
         <ThemeProvider>
           <ErrorBoundary>
+            <SyncCartToLocalStorage />
             <Header />
             <main className="max-w-mainSize min-h-screen mx-auto bg-custom">{children}</main>
             <Footer />
