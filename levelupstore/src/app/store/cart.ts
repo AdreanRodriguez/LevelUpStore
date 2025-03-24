@@ -16,17 +16,7 @@ export interface CartItemGenre extends Genres {
 // Kundvagnen kan innehålla både produkter och genrer
 export type CartItem = CartItemProduct | CartItemGenre;
 
-// Hämta från localStorage när sidan är laddad
-const getInitialCart = (): CartItem[] => {
-  if (typeof window !== "undefined") {
-    const stored = localStorage.getItem("cart");
-    if (stored) return JSON.parse(stored);
-  }
-  return [];
-};
-
 // Atom för kundvagnens innehåll
-// Om sidan uppdateras så ska varukorgen ha kvar sina produkter
 export const cartAtom = atom<CartItem[]>([]);
 
 // Håll koll på vilken "BUY NOW" knapp som klickats
