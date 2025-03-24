@@ -5,8 +5,8 @@ import getPriceByYear from "../utils/getPriceByYear";
 
 // Skapa separata CartItem-typer för produkter och genrer
 export interface CartItemProduct extends Product {
-  quantity: number;
   price: number;
+  quantity: number;
 }
 
 export interface CartItemGenre extends Genres {
@@ -16,7 +16,17 @@ export interface CartItemGenre extends Genres {
 // Kundvagnen kan innehålla både produkter och genrer
 export type CartItem = CartItemProduct | CartItemGenre;
 
+// Hämta från localStorage när sidan är laddad
+const getInitialCart = (): CartItem[] => {
+  if (typeof window !== "undefined") {
+    const stored = localStorage.getItem("cart");
+    if (stored) return JSON.parse(stored);
+  }
+  return [];
+};
+
 // Atom för kundvagnens innehåll
+// Om sidan uppdateras så ska varukorgen ha kvar sina produkter
 export const cartAtom = atom<CartItem[]>([]);
 
 // Håll koll på vilken "BUY NOW" knapp som klickats
@@ -28,9 +38,12 @@ export const cartCountAtom = atom((get) => get(cartAtom).reduce((total, item) =>
 // Beräkna totalpris för kundvagnen
 export const cartTotalPriceAtom = atom((get) => get(cartAtom).reduce((total, item) => ("price" in item ? total + item.price * item.quantity : total), 0));
 
-// Tömmer hela kundvagnen
+// Tömmer hela kundvagnen + localStorage
 export const clearCartAtom = atom(null, (_, set) => {
   set(cartAtom, []); // Sätter cart till en tom array
+  if (typeof window !== "undefined") {
+    localStorage.removeItem("cart");
+  }
 });
 
 // Lägga till en produkt eller genre i kundvagnen
@@ -38,14 +51,12 @@ export const addToCartAtom = atom(null, (get, set, item: Product | Genres) => {
   const cart = get(cartAtom);
   const existingItem = cart.find((cartItem) => cartItem.id === item.id);
 
+  let updatedCart: CartItem[];
+
   if (existingItem) {
-    // Öka quantity om produkten eller genren redan finns
-    set(
-      cartAtom,
-      cart.map((cartItem) => (cartItem.id === item.id ? { ...cartItem, quantity: cartItem.quantity + 1 } : cartItem))
-    );
+    updatedCart = cart.map((cartItem) => (cartItem.id === item.id ? { ...cartItem, quantity: cartItem.quantity + 1 } : cartItem));
   } else {
-    // Beräkna pris endast om det är ett Product (spel)
+    // Beräkna pris endast om det är ett Product (alltså ett spel)
     const isGame = "released" in item;
     const newItem: CartItem = isGame
       ? {
@@ -55,16 +66,19 @@ export const addToCartAtom = atom(null, (get, set, item: Product | Genres) => {
         }
       : { ...(item as Genres), quantity: 1 };
 
-    set(cartAtom, [...cart, newItem]);
+    updatedCart = [...cart, newItem];
   }
 
   // Uppdatera clickedButtonAtom med item.id
+  set(cartAtom, updatedCart);
+  if (typeof window !== "undefined") {
+    localStorage.setItem("cart", JSON.stringify(updatedCart));
+  }
+
   set(clickedButtonAtom, item.id);
 
   // Återställ clickedButton efter 1 sekund
-  setTimeout(() => {
-    set(clickedButtonAtom, null);
-  }, 1000);
+  setTimeout(() => set(clickedButtonAtom, null), 1000);
 });
 
 // Ta bort en produkt eller genre från kundvagnen
@@ -73,4 +87,7 @@ export const removeFromCartAtom = atom(null, (get, set, id: number) => {
   const updatedCart = cart.map((item) => (item.id === id ? { ...item, quantity: item.quantity - 1 } : item)).filter((item) => item.quantity > 0);
 
   set(cartAtom, updatedCart);
+  if (typeof window !== "undefined") {
+    localStorage.setItem("cart", JSON.stringify(updatedCart));
+  }
 });
