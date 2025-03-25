@@ -1,23 +1,11 @@
 # 🎮 LevelUp Store
 
-## [👉 Live Demo on Vercel](https://level-up-store-one.vercel.app/)
+## [👉 Live on Vercel](https://level-up-store-one.vercel.app/)
 
 </br>
 
 **LevelUp Store** is a modern e-commerce platform for discovering and purchasing video games.  
 Built with **Next.js**, **Tailwind CSS**, and the **RAWG API**, it offers a smooth and stylish shopping experience with a fully functional cart, dark/light mode toggle, and animated checkout flow.
-
-### 🧾 About This Project
-
-This project was created to simulate a real online game store using modern frontend tools.
-
-The user can:
-
-- Browse and explore games
-- Add them to the cart
-- Go through a simple checkout (ZIP → BankID scan → confirmation)
-- Receive an order confirmation with summary and order ID
-- All cart data is stored in `localStorage` for persistence.
 
 ---
 
