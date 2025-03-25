@@ -4,7 +4,7 @@ import Header from "./components/Header";
 import Footer from "./components/Footer";
 import { Geist, Geist_Mono } from "next/font/google";
 import ThemeProvider from "./components/ThemeProvider";
-import ErrorBoundary from "@/app/components/errorBoundary/ErrorBoundary";
+import ErrorBoundary from "@/app/components/ErrorBoundary";
 import SyncCartToLocalStorage from "./components/SyncCartToLocalStorage";
 
 const geistSans = Geist({
