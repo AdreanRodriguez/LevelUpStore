@@ -101,7 +101,7 @@ const ThemeSwitcher: React.FC = () => {
           />
 
           {/* Solstrålar i Light Mode */}
-          <m.g variants={raysVariants} initial="hidden" animate={currentTheme === "light" ? "visible" : "hidden"} className="stroke-6 stroke-yellow-600">
+          <m.g variants={raysVariants} initial="hidden" animate={mount && currentTheme === "light" ? "visible" : "hidden"} className="stroke-6 stroke-yellow-600">
             <m.path variants={rayVariant} d="M50 2V11" />
             <m.path variants={rayVariant} d="M85 15L78 22" />
             <m.path variants={rayVariant} d="M98 50H89" />

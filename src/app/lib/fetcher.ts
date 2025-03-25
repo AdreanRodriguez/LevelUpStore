@@ -11,7 +11,6 @@ async function safeFetch<T>(url: string, signal?: AbortSignal): Promise<T> {
 
   try {
     const response = await fetch(url, {
-      // cache: "no-store", // Hämta alltid färsk data
       next: { revalidate: 10 }, // Uppdatera sidan bara inom minst 10 sekunder
       signal, // Lägg till signal för att kunna avbryta fetch
     });
