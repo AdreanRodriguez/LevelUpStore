@@ -80,11 +80,11 @@ const ThemeSwitcher: React.FC = () => {
       >
         <m.svg strokeWidth="4" strokeLinecap="round" width={100} height={100} viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" className="relative">
           {/* Shine Effekt på Månen i Dark Mode */}
-          <m.path variants={shineVariant} initial="hidden" animate={currentTheme === "dark" ? "visible" : "hidden"} className="absolute top-0 left-0 stroke-blue-100" />
+          <m.path variants={shineVariant} initial="hidden" animate={mount && currentTheme === "dark" ? "visible" : "hidden"} className="absolute top-0 left-0 stroke-blue-100" />
 
           {/* Månen i Dark Mode / Solen i Light Mode */}
           <m.path
-            className={currentTheme === "dark" ? "fill-blue-400 stroke-blue-400" : "fill-yellow-600 stroke-yellow-600"}
+            className={mount && currentTheme === "dark" ? "fill-blue-400 stroke-blue-400" : "fill-yellow-600 stroke-yellow-600"}
             d={currentTheme === "dark" ? moonPath : sunPath}
             initial={{ opacity: 0, scale: 0 }}
             animate={{
