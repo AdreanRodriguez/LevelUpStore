@@ -52,7 +52,7 @@ NEXT_PUBLIC_BASE_URL="https://api.rawg.io/api"
 NEXT_PUBLIC_RAWG_API_KEY="your_rawg_api_key"
 ```
 
-- ### You can request a free API key at: [RAWG.io/apidocs](https://rawg.io/apidocs)
+- You can request a free API key at: [RAWG.io/apidocs](https://rawg.io/apidocs)
 
 ### 3. Run the development server locally
 
